@@ -1,7 +1,7 @@
 {
   "name": "codex-workflow",
-  "version": "0.1.1",
-  "description": "Hooks (and later skills/templates) for the AI Codex workflow: SessionStart Codex orientation injection + PreToolUse markdown allowlist enforcement.",
+  "version": "0.2.0",
+  "description": "AI Codex workflow plugin: SessionStart Codex orientation injection, PreToolUse markdown allowlist, and init skills for the CLAUDE.md tree, Obsidian vault, and .agent/rules starter set.",
   "author": {
     "name": "Théo Carranza"
   }

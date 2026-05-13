@@ -8,7 +8,7 @@
       "name": "codex-workflow",
       "source": "./codex-workflow",
       "description": "Portable AI Codex workflow setup — hooks, skills, and templates for the CLAUDE.md tree + Obsidian vault pattern.",
-      "version": "0.1.1"
+      "version": "0.2.0"
     }
   ]
 }

@@ -2,13 +2,13 @@
 # SessionStart hook: inject Codex orientation as additionalContext.
 #
 # Config: $CLAUDE_PROJECT_DIR/.claude/codex-workflow.config.json
-#   .codex.folder         — codex folder name (defaults to glob AI_Codex_*)
+#   .codex.folder         — codex folder name (defaults to glob AI_Codex*/)
 #   .codex.bootstrap[]    — relative paths to inject (defaults to
 #                           README.md + Knowledge/Agent_Orientation.md)
 #
 # Behavior:
 #   - If config exists, its values win.
-#   - If no config and no AI_Codex_* folder found, the hook is a silent no-op.
+#   - If no config and no AI_Codex*/ folder found, the hook is a silent no-op.
 #   - Missing individual files are noted inline rather than aborting.
 
 set -euo pipefail

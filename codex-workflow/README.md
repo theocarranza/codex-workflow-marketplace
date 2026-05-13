@@ -1,10 +1,20 @@
 # codex-workflow
 
-Portable hooks (and, in upcoming versions, skills + templates) for the AI Codex workflow: a project layout pairing a code monorepo with an Obsidian vault that serves as the canonical agent knowledge base.
+Portable hooks and skills for the AI Codex workflow: a project layout pairing a codebase with an Obsidian vault that serves as the canonical agent knowledge base.
 
-## What's in v0.1.0
+## What's in v0.2.0
 
-Two hooks, configurable per project, with sensible zero-config defaults.
+Two hooks plus three init skills, all configurable per project with sensible zero-config defaults.
+
+### Init skills
+
+- `/codex-workflow:codex-init-workspace` — scaffold the CLAUDE.md tree (root + per-project) by inspecting `package.json` / `pubspec.yaml`.
+- `/codex-workflow:codex-init-vault` — scaffold the Obsidian vault skeleton (README, Knowledge/, Agent_Sessions/, Tickets/, Architecture/, Features/, Agent_Reports/, assets/).
+- `/codex-workflow:codex-init-rules` — drop a starter set of `.agent/rules/*.md` template files (`strict-implementation-lock`, `rules-architect-protocol`, `rules-git-workflow`, `rules-date-time-handling`).
+
+Each init skill is an interactive walkthrough: it inspects current project state, proposes a plan, asks the user to confirm, then writes. Existing files are never overwritten without explicit per-file approval.
+
+### Hooks
 
 ### `SessionStart` — Codex orientation injection
 
@@ -46,10 +56,9 @@ If you want to customize, drop a file at `.claude/codex-workflow.config.json` in
 
 | Version | Adds |
 |---|---|
-| 0.1.0 (this) | Hooks: SessionStart bootstrap + PreToolUse markdown allowlist. Config-driven, with autodetect fallback. |
-| 0.2.0 (planned) | Skill `codex-init-workspace`: scaffolds the CLAUDE.md tree (root + per-project) from a project's `package.json` / `pubspec.yaml`. |
-| 0.2.0 (planned) | Skill `codex-init-vault`: scaffolds the Obsidian vault skeleton (README + Knowledge/Agent_Orientation). |
-| 0.2.0 (planned) | Skill `codex-init-rules`: drops cross-cutting `.agent/rules/*.md` files. |
+| 0.1.0 | Hooks: SessionStart bootstrap + PreToolUse markdown allowlist. Config-driven, with autodetect fallback. |
+| 0.1.1 | Hooks: broaden `AI_Codex*/` autodetect glob; silently skip missing bootstrap files. |
+| 0.2.0 (this) | Init skills: `codex-init-workspace`, `codex-init-vault`, `codex-init-rules`. |
 | 0.3.0 (planned) | Skill `codex-mine-style`: interactive walkthrough that mines authored commits to draft canonical-style-examples notes. |
 | 0.3.0 (planned) | Skill `codex-add-refactor-entry`: takes a commit hash and proposes an entry for the Style Refactor Catalog. |
 
@@ -64,6 +73,10 @@ codex-workflow/
 │   └── scripts/
 │       ├── codex-bootstrap.sh
 │       └── markdown-allowlist.sh
+├── skills/
+│   ├── codex-init-workspace/SKILL.md
+│   ├── codex-init-vault/SKILL.md
+│   └── codex-init-rules/SKILL.md
 ├── examples/
 │   └── codex-workflow.config.example.json
 └── README.md

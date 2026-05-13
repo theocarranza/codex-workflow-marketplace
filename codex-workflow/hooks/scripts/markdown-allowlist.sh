@@ -9,7 +9,7 @@
 # Defaults when no config:
 #   - CLAUDE.md, GEMINI.md at any level
 #   - any *.md under .agent/ (recursive, root or per-project)
-#   - the autodetected AI_Codex_* folder, in full
+#   - the autodetected AI_Codex*/ folder, in full
 #
 # Behavior:
 #   - Only intervenes on *.md (case-insensitive) inside the project tree.
