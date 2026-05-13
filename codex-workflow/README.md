@@ -2,9 +2,9 @@
 
 Portable hooks and skills for the AI Codex workflow: a project layout pairing a codebase with an Obsidian vault that serves as the canonical agent knowledge base.
 
-## What's in v0.2.0
+## What's in v0.3.0
 
-Two hooks plus three init skills, all configurable per project with sensible zero-config defaults.
+Two hooks, three init skills, two mining skills — all configurable per project with sensible zero-config defaults.
 
 ### Init skills
 
@@ -12,7 +12,12 @@ Two hooks plus three init skills, all configurable per project with sensible zer
 - `/codex-workflow:codex-init-vault` — scaffold the Obsidian vault skeleton (README, Knowledge/, Agent_Sessions/, Tickets/, Architecture/, Features/, Agent_Reports/, assets/).
 - `/codex-workflow:codex-init-rules` — drop a starter set of `.agent/rules/*.md` template files (`strict-implementation-lock`, `rules-architect-protocol`, `rules-git-workflow`, `rules-date-time-handling`).
 
-Each init skill is an interactive walkthrough: it inspects current project state, proposes a plan, asks the user to confirm, then writes. Existing files are never overwritten without explicit per-file approval.
+### Mining skills
+
+- `/codex-workflow:codex-mine-style` — interactive walkthrough that mines an author's commits (`git log --author=...`) to draft a canonical-style-examples Knowledge note with file/line anchors and an Agent Rules block.
+- `/codex-workflow:codex-add-refactor-entry <commit-hash>` — inspect a refactor commit and append a before/after entry to the Style Refactor Catalog with the principle applied.
+
+Every skill is an interactive walkthrough: it inspects current state, proposes a plan, asks the user to confirm, then writes. Existing files are never overwritten without explicit per-file approval.
 
 ### Hooks
 
@@ -58,9 +63,8 @@ If you want to customize, drop a file at `.claude/codex-workflow.config.json` in
 |---|---|
 | 0.1.0 | Hooks: SessionStart bootstrap + PreToolUse markdown allowlist. Config-driven, with autodetect fallback. |
 | 0.1.1 | Hooks: broaden `AI_Codex*/` autodetect glob; silently skip missing bootstrap files. |
-| 0.2.0 (this) | Init skills: `codex-init-workspace`, `codex-init-vault`, `codex-init-rules`. |
-| 0.3.0 (planned) | Skill `codex-mine-style`: interactive walkthrough that mines authored commits to draft canonical-style-examples notes. |
-| 0.3.0 (planned) | Skill `codex-add-refactor-entry`: takes a commit hash and proposes an entry for the Style Refactor Catalog. |
+| 0.2.0 | Init skills: `codex-init-workspace`, `codex-init-vault`, `codex-init-rules`. |
+| 0.3.0 (this) | Mining skills: `codex-mine-style`, `codex-add-refactor-entry`. |
 
 ## Layout
 
@@ -76,7 +80,9 @@ codex-workflow/
 ├── skills/
 │   ├── codex-init-workspace/SKILL.md
 │   ├── codex-init-vault/SKILL.md
-│   └── codex-init-rules/SKILL.md
+│   ├── codex-init-rules/SKILL.md
+│   ├── codex-mine-style/SKILL.md
+│   └── codex-add-refactor-entry/SKILL.md
 ├── examples/
 │   └── codex-workflow.config.example.json
 └── README.md

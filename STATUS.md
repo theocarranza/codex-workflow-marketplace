@@ -4,7 +4,7 @@ Snapshot of the in-flight plugin build, captured for cross-session resumption. U
 
 ## Where we are (2026-05-13)
 
-**v0.2.0 — Layer 2 (init skills tranche) is built, validated, and pushed. v0.1.1 hooks are installed live.**
+**v0.3.0 — feature-complete against the original roadmap. All three tranches (hooks, init skills, mining skills) shipped and pushed. v0.2.0 validated live (3 skills visible in `/skills`, `locked by author`).**
 
 ### Done
 
@@ -23,7 +23,7 @@ Snapshot of the in-flight plugin build, captured for cross-session resumption. U
 - Marketplace + plugin manifests bumped to 0.1.1.
 - Plugin installed via `/plugin marketplace add theocarranza/codex-workflow-marketplace` + `/plugin install codex-workflow@codex-workflow-marketplace` + `/reload-plugins`. Behavioral validation: Read on `aplicatudo-monorepo/README.md` is denied by the plugin's allowlist (confirmed live in-session).
 
-**v0.2.0 — Init skills tranche (pushed; awaiting user-side refresh + verification).**
+**v0.2.0 — Init skills tranche (committed `9af4b88`, pushed; live-validated).**
 - Three new skills under `codex-workflow/skills/`:
   - `codex-init-workspace/SKILL.md` — interactive walkthrough that inspects `package.json` / `pubspec.yaml` / `angular.json` / `pnpm-workspace.yaml`, detects project shape (single vs monorepo) and per-project stacks, then scaffolds the root + per-project CLAUDE.md tree from stack-specific templates. Never overwrites without per-file approval.
   - `codex-init-vault/SKILL.md` — interactive walkthrough that picks a vault folder name (default `AI_Codex_<ProjectName>`), refuses if vault exists, scaffolds the full skeleton (`README.md`, `Knowledge/Agent_Orientation.md`, `Agent_Sessions/README.md`, plus `.gitkeep`-anchored empty dirs).
@@ -32,14 +32,22 @@ Snapshot of the in-flight plugin build, captured for cross-session resumption. U
 - v0.1.1 cosmetic: comment headers in both hook scripts aligned (`AI_Codex_*` → `AI_Codex*/`) to match what the code actually globs. Folded into the v0.2.0 push, no separate version bump.
 - Plugin README rewritten to surface init skills first; roadmap table updated.
 - Manifests bumped to 0.2.0; `jq -e` clean.
+- Live-validated post-refresh: `/skills` lists all three with `locked by author` (matches `disable-model-invocation: true`) at ~100–120 tokens each.
+
+**v0.3.0 — Mining skills tranche (pushed; awaiting user-side refresh + verification).**
+- Two new skills under `codex-workflow/skills/`:
+  - `codex-mine-style/SKILL.md` — interactive walkthrough that gathers commits via `git log --author --no-merges`, surfaces high-frequency files, samples patterns, drafts a `<Stack>_Functional_Style_Examples.md` Knowledge note with 6–10 file/line anchors and an Agent Rules block.
+  - `codex-add-refactor-entry/SKILL.md` — takes a commit hash via `$ARGUMENTS`, validates with `git rev-parse`, reads the diff, drafts a before/after Catalog entry annotated with the principle applied, appends after confirmation.
+- Both carry `disable-model-invocation: true`. `codex-add-refactor-entry` declares `argument-hint: <commit-hash>`.
+- Plugin README rewritten to surface both layers; roadmap table marks v0.3.0 shipped (no more "(planned)" rows).
+- Manifests bumped to 0.3.0; `jq -e` clean.
 
 ### Not done (next steps in order)
 
-1. **User-side refresh of v0.2.0.** `/plugin marketplace update codex-workflow-marketplace` (expect "1 plugin bumped") then `/reload-plugins`. Verify `/codex-workflow:codex-init-workspace`, `:codex-init-vault`, `:codex-init-rules` all appear in `/skills`. Optional: invoke one in a scratch directory and watch the inspection step run.
-2. **Layer 3 skills (planned for v0.3.0):**
-   - `codex-mine-style` — interactive walkthrough that mines authored commits (`git log --author=<email> --no-merges --name-only`), reads anchor files, drafts canonical-style-examples notes with file/line anchors.
-   - `codex-add-refactor-entry` — takes a commit hash via `$ARGUMENTS`, runs `git show`, drafts a before/after entry for the Style Refactor Catalog.
-3. **Deferred (parked by user):** cleanup of the inline hooks in `aplicatudo-monorepo/.claude/` (would otherwise double-fire alongside plugin hooks). Tracked in the prior session's Pending Tasks.
+1. **User-side refresh of v0.3.0.** `/plugin marketplace update codex-workflow-marketplace` (expect "1 plugin bumped") then `/reload-plugins`. Verify `/codex-workflow:codex-mine-style` and `:codex-add-refactor-entry` appear in `/skills` alongside the v0.2.0 three.
+2. **Deferred (parked by user):** cleanup of the inline hooks in `aplicatudo-monorepo/.claude/` (would otherwise double-fire alongside plugin hooks). Tracked in the 2026-05-13 06:56:37 session's Pending Tasks.
+
+The original roadmap is feature-complete after step 1. Future versions are open-ended (additional skills, refinements based on real-world use).
 
 ## Key decisions (confirmed)
 
