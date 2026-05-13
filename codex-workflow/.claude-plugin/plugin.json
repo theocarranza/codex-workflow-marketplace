@@ -1,6 +1,6 @@
 {
   "name": "codex-workflow",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hooks (and later skills/templates) for the AI Codex workflow: SessionStart Codex orientation injection + PreToolUse markdown allowlist enforcement.",
   "author": {
     "name": "Théo Carranza"

@@ -54,7 +54,7 @@ if [[ -f "$config" ]]; then
   codex_folder="$(jq -r '.codex.folder // ""' "$config")"
 fi
 if [[ -z "$codex_folder" ]]; then
-  for d in "$project_dir"/AI_Codex_*/; do
+  for d in "$project_dir"/AI_Codex*/; do
     [[ -d "$d" ]] || continue
     codex_folder="$(basename "$d")"
     break

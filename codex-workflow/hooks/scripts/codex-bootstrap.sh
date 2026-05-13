@@ -22,7 +22,7 @@ if [[ -f "$config" ]]; then
 fi
 
 if [[ -z "$codex_folder" ]]; then
-  for d in "$project_dir"/AI_Codex_*/; do
+  for d in "$project_dir"/AI_Codex*/; do
     [[ -d "$d" ]] || continue
     codex_folder="$(basename "$d")"
     break
@@ -45,21 +45,22 @@ fi
 
 codex_root="$project_dir/$codex_folder"
 
-read_or_note() {
-  local f="$1"
-  if [[ -f "$f" ]]; then
-    cat -- "$f"
-  else
-    printf '(missing: %s)\n' "$f"
-  fi
-}
+# Only include files that actually exist; silently skip missing ones.
+present_files=()
+for f in "${files[@]}"; do
+  [[ -f "$codex_root/$f" ]] && present_files+=("$f")
+done
+
+if [[ ${#present_files[@]} -eq 0 ]]; then
+  exit 0
+fi
 
 context="$(
   printf '=== Codex bootstrap (auto-loaded via SessionStart hook) ===\n'
   printf 'Source: %s\n' "$codex_folder"
-  for f in "${files[@]}"; do
+  for f in "${present_files[@]}"; do
     printf '\n--- %s/%s ---\n' "$codex_folder" "$f"
-    read_or_note "$codex_root/$f"
+    cat -- "$codex_root/$f"
   done
 )"
 
