@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/codex-bootstrap.sh\"",
+            "timeout": 10,
+            "statusMessage": "Loading Codex orientation"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Read|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/markdown-allowlist.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

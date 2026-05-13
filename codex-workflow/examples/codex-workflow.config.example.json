@@ -1,0 +1,20 @@
+{
+  "$schema-comment": "Optional config for the codex-workflow plugin. Drop this file at .claude/codex-workflow.config.json in any project that adopts the plugin. All keys are optional; omitted keys fall back to sensible defaults.",
+  "codex": {
+    "folder": "AI_Codex_MyProject",
+    "bootstrap": [
+      "README.md",
+      "Knowledge/Agent_Orientation.md"
+    ]
+  },
+  "markdownAllowlist": {
+    "patterns": [
+      "CLAUDE.md",
+      "GEMINI.md",
+      ".agent/*",
+      "projects/*/CLAUDE.md",
+      "projects/*/GEMINI.md",
+      "projects/*/.agent/*"
+    ]
+  }
+}

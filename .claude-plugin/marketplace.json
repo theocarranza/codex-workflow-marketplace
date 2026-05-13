@@ -1,0 +1,14 @@
+{
+  "name": "codex-workflow-marketplace",
+  "owner": {
+    "name": "Théo Carranza"
+  },
+  "plugins": [
+    {
+      "name": "codex-workflow",
+      "source": "./codex-workflow",
+      "description": "Portable AI Codex workflow setup — hooks, skills, and templates for the CLAUDE.md tree + Obsidian vault pattern.",
+      "version": "0.1.0"
+    }
+  ]
+}
