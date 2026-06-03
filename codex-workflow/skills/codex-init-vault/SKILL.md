@@ -173,6 +173,7 @@ Single-file workspace map. Read this immediately after the codex `README.md`.
 | `/codex-workflow:codex-init-rules` | Drop starter `.agent/rules/*.md` templates. |
 | `/codex-workflow:codex-mine-bases` | Backfill frontmatter + scaffold Base dashboards over the vault. |
 | `/codex-workflow:codex-query-vault` | Read-only live query of the vault (Bases, search, backlinks) via the Obsidian CLI. |
+| `/codex-workflow:codex-canvas-map` | Generate an Architecture Canvas relationship map for a hub note. |
 ```
 
 ### `<vault>/Agent_Sessions/README.md`

@@ -2,9 +2,9 @@
 
 Portable hooks and skills for the AI Codex workflow: a project layout pairing a codebase with an Obsidian vault that serves as the canonical agent knowledge base.
 
-## What's in v0.5.0
+## What's in v0.6.0
 
-Two hooks, three init skills, three mining skills, and one live query skill — all configurable per project with sensible zero-config defaults.
+Two hooks, three init skills, three mining skills, one live query skill, and one Canvas generator — all configurable per project with sensible zero-config defaults.
 
 ### Init skills
 
@@ -21,6 +21,10 @@ Two hooks, three init skills, three mining skills, and one live query skill — 
 ### Query skills
 
 - `/codex-workflow:codex-query-vault` — **read-only** live query of the vault via the Obsidian CLI: list/query Bases (open tickets, features by area, recent sessions), full-text `search`, and `backlinks` — instead of raw file reads. The sanctioned read channel that complements the markdown allowlist. Requires Obsidian running with the vault open; degrades gracefully when it isn't. Unlike the side-effecting `codex-*` skills, this one **allows model invocation** (it's read-only), so agents can reach for it whenever they need vault state.
+
+### Canvas skills
+
+- `/codex-workflow:codex-canvas-map <hub-note>` — generate an Obsidian Canvas (`.canvas`) relationship map for a hub note: the note centered, its outgoing `links` on one side and its `backlinks` on the other, wired with arrows, saved to `Architecture/`. Reads the link graph via the Obsidian CLI (composes the v0.5.0 query channel with the JSON Canvas format). Requires Obsidian running; validates node/edge integrity before writing.
 
 Every skill is an interactive walkthrough: it inspects current state, proposes a plan, asks the user to confirm, then writes. Existing files are never overwritten without explicit per-file approval.
 
@@ -71,7 +75,8 @@ If you want to customize, drop a file at `.claude/codex-workflow.config.json` in
 | 0.2.0 | Init skills: `codex-init-workspace`, `codex-init-vault`, `codex-init-rules`. |
 | 0.3.0 | Mining skills: `codex-mine-style`, `codex-add-refactor-entry`. |
 | 0.4.0 | Bases tranche: `codex-mine-bases` skill + frontmatter convention; `codex-init-vault` now emits `.base` dashboards (Tickets/Features/Agent_Sessions). |
-| 0.5.0 (this) | obsidian-cli tranche: `codex-query-vault` — read-only live `base:query`/`search`/`backlinks` vault access. |
+| 0.5.0 | obsidian-cli tranche: `codex-query-vault` — read-only live `base:query`/`search`/`backlinks` vault access. |
+| 0.6.0 (this) | json-canvas tranche: `codex-canvas-map` — Canvas relationship map for a hub note (links + backlinks) into `Architecture/`. |
 | 0.6.0 (planned) | json-canvas tranche: Architecture canvases. |
 | 0.7.0 (planned) | defuddle tranche: clean research ingestion into `Knowledge/`. |
 
@@ -95,7 +100,8 @@ codex-workflow/
 │   ├── codex-mine-style/SKILL.md
 │   ├── codex-add-refactor-entry/SKILL.md
 │   ├── codex-mine-bases/SKILL.md
-│   └── codex-query-vault/SKILL.md
+│   ├── codex-query-vault/SKILL.md
+│   └── codex-canvas-map/SKILL.md
 ├── references/
 │   └── frontmatter-convention.md
 ├── docs/
