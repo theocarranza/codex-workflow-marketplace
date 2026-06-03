@@ -46,3 +46,7 @@ Gotchas found:
 - The CLI requires the Obsidian app to be running with the target vault open; design any
   hook/skill that uses it to **degrade gracefully** (fall back to file reads or no-op) when
   the CLI is unavailable.
+- **`base:query` only returns columns in a view's `order`** — not the `groupBy` property.
+  So a "By area" view that groups by `area` but omits it from `order` shows blank `area` over
+  the CLI (it still renders correctly *inside* Obsidian). Rule: for any Base you intend to
+  query via the CLI, **put the `groupBy` property in `order` too**.

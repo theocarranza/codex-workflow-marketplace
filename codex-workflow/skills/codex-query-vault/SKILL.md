@@ -86,3 +86,7 @@ allowlisted for the agent; raw greps across it are not — that's what this skil
 - All commands are safe to retry; none mutate the vault.
 - If a `view=` name is wrong, `base:query` errors clearly — list the `.base` file's views by
   reading the `.base` file (it's YAML, not blocked by the markdown allowlist) and retry.
+- **`base:query` returns only a view's `order` columns, not its `groupBy` property.** If a
+  grouped column comes back blank (e.g. `area` in a "By area" view), the data is fine — the
+  Base just doesn't list that property in `order`. Read the `.base` YAML to confirm, and prefer
+  views whose `order` includes everything you need.
