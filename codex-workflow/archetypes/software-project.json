@@ -28,6 +28,10 @@
       "purpose": "Feature specifications and implementation detail"
     },
     {
+      "path": "Architecture",
+      "purpose": "High-level architecture overviews (subfolders below for ADRs/patterns/etc.)"
+    },
+    {
       "path": "Architecture/ADR",
       "purpose": "Architecture Decision Records"
     },
@@ -38,6 +42,14 @@
     {
       "path": "Architecture/Infrastructure",
       "purpose": "Structural/infra definitions"
+    },
+    {
+      "path": "Architecture/Agent-Governance",
+      "purpose": "Agent governance protocols and directives"
+    },
+    {
+      "path": "Architecture/Protocols",
+      "purpose": "Operational protocols"
     },
     {
       "path": "Agent_Sessions",
