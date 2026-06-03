@@ -18,8 +18,9 @@ in one place.
 | 5 | **Design: agents query a Base instead of raw-reading files**; the markdown allowlist becomes a "use the structured channel" guardrail | **`obsidian-cli`** (`base:query`) | The runtime channel the convention is built for — see runway item A, now validated |
 | 6 | **Finding: Obsidian rewrites `.base` files on open** (strips comments, flow→block, adds `columnSize`) | **`obsidian-bases`** (observed) | Folded into [`frontmatter-convention.md`](../references/frontmatter-convention.md) |
 
-Net: of the five obsidian-skills, **`obsidian-bases`** and **`obsidian-markdown`** are fully
-exploited and shipped as v0.4.0.
+Net: **all five** obsidian-skills are now leveraged — `obsidian-bases` + `obsidian-markdown`
+(v0.4.0), `obsidian-cli` (v0.5.0 `codex-query-vault`, also powering v0.6.0), `json-canvas`
+(v0.6.0 `codex-canvas-map`), and `defuddle` (v0.7.0 `codex-research-ingest`).
 
 ## Open runway
 
@@ -27,7 +28,7 @@ exploited and shipped as v0.4.0.
 |---|---|---|---|---|
 | **A. Live vault queries** via `obsidian base:query` + `search` instead of `cat`/raw reads | **`obsidian-cli`** | High — makes the vault a live, queryable knowledge source; complements the markdown allowlist | **SHIPPED v0.5.0** as the read-only `codex-query-vault` skill; dogfooded live | Optional: opt-in SessionStart enhancement to inject open-ticket snapshot |
 | **B. Architecture canvases** — visual relationship maps in `Architecture/` | **`json-canvas`** | Medium | **SHIPPED v0.6.0** as `codex-canvas-map` (hub note → links/backlinks graph); dogfooded live | Optional: more layouts (domain clusters, full dependency graphs) |
-| **C. Research ingestion** — route external-doc research into `Knowledge/` as clean, source-stamped notes instead of WebFetch dumps | **`defuddle`** | Medium | **Blocked** — Defuddle CLI not installed (`npx` not cached) | Install Defuddle CLI first, then add an ingest skill |
+| **C. Research ingestion** — external docs → clean, source-stamped `Knowledge/` notes | **`defuddle`** | Medium | **SHIPPED v0.7.0** as `codex-research-ingest`; Defuddle installed + dogfooded live | Optional: batch/multi-page ingest |
 
 ### Validated CLI invocation (item A)
 

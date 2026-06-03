@@ -2,9 +2,9 @@
 
 Portable hooks and skills for the AI Codex workflow: a project layout pairing a codebase with an Obsidian vault that serves as the canonical agent knowledge base.
 
-## What's in v0.6.0
+## What's in v0.7.0
 
-Two hooks, three init skills, three mining skills, one live query skill, and one Canvas generator — all configurable per project with sensible zero-config defaults.
+Two hooks, three init skills, three mining skills, one live query skill, one Canvas generator, and one research-ingest skill — all configurable per project with sensible zero-config defaults.
 
 ### Init skills
 
@@ -25,6 +25,10 @@ Two hooks, three init skills, three mining skills, one live query skill, and one
 ### Canvas skills
 
 - `/codex-workflow:codex-canvas-map <hub-note>` — generate an Obsidian Canvas (`.canvas`) relationship map for a hub note: the note centered, its outgoing `links` on one side and its `backlinks` on the other, wired with arrows, saved to `Architecture/`. Reads the link graph via the Obsidian CLI (composes the v0.5.0 query channel with the JSON Canvas format). Requires Obsidian running; validates node/edge integrity before writing.
+
+### Research skills
+
+- `/codex-workflow:codex-research-ingest <url>` — fetch an external web page as clean markdown with the [Defuddle](https://github.com/kepano/defuddle) CLI and file it into `Knowledge/` as a source-stamped `type: reference` note (with `source`/`domain`/`retrieved` frontmatter and a provenance callout). More than a fetch: it follows the frontmatter convention and slots into the Knowledge index. Requires `defuddle` (`npm install -g defuddle`).
 
 Every skill is an interactive walkthrough: it inspects current state, proposes a plan, asks the user to confirm, then writes. Existing files are never overwritten without explicit per-file approval.
 
@@ -76,7 +80,8 @@ If you want to customize, drop a file at `.claude/codex-workflow.config.json` in
 | 0.3.0 | Mining skills: `codex-mine-style`, `codex-add-refactor-entry`. |
 | 0.4.0 | Bases tranche: `codex-mine-bases` skill + frontmatter convention; `codex-init-vault` now emits `.base` dashboards (Tickets/Features/Agent_Sessions). |
 | 0.5.0 | obsidian-cli tranche: `codex-query-vault` — read-only live `base:query`/`search`/`backlinks` vault access. |
-| 0.6.0 (this) | json-canvas tranche: `codex-canvas-map` — Canvas relationship map for a hub note (links + backlinks) into `Architecture/`. |
+| 0.6.0 | json-canvas tranche: `codex-canvas-map` — Canvas relationship map for a hub note (links + backlinks) into `Architecture/`. |
+| 0.7.0 (this) | defuddle tranche: `codex-research-ingest` — fetch a URL via Defuddle into a source-stamped `Knowledge/` reference note. |
 | 0.6.0 (planned) | json-canvas tranche: Architecture canvases. |
 | 0.7.0 (planned) | defuddle tranche: clean research ingestion into `Knowledge/`. |
 
@@ -101,7 +106,8 @@ codex-workflow/
 │   ├── codex-add-refactor-entry/SKILL.md
 │   ├── codex-mine-bases/SKILL.md
 │   ├── codex-query-vault/SKILL.md
-│   └── codex-canvas-map/SKILL.md
+│   ├── codex-canvas-map/SKILL.md
+│   └── codex-research-ingest/SKILL.md
 ├── references/
 │   └── frontmatter-convention.md
 ├── docs/
@@ -120,3 +126,8 @@ Hook scripts require:
 - `realpath` (part of GNU coreutils)
 
 All three are standard on Linux and recent macOS. Windows users running under WSL or Git Bash should also be fine.
+
+Some skills have optional runtime dependencies (the skill degrades or instructs install when absent):
+
+- `codex-query-vault`, `codex-canvas-map` — the [`obsidian` CLI](https://github.com/Yakitrak/obsidian-cli) and Obsidian running with the vault open.
+- `codex-research-ingest` — the [`defuddle`](https://github.com/kepano/defuddle) CLI (`npm install -g defuddle`).
