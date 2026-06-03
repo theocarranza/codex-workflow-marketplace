@@ -60,7 +60,13 @@ Snapshot of the in-flight plugin build, captured for cross-session resumption. U
 1. **Commit the `aplicatudo` vault migration** in the monorepo repo (separate from this plugin repo) — the backfill/normalization edits are currently uncommitted working-tree changes. (User's content; left for the user to commit.)
 2. **Deferred (parked by user):** cleanup of the inline hooks in `aplicatudo-monorepo/.claude/` (would otherwise double-fire alongside plugin hooks). Tracked in the 2026-05-13 06:56:37 session's Pending Tasks.
 
-The original roadmap is feature-complete: v0.4.0 is shipped and validated both ways. Future versions are open-ended (additional skills, refinements based on real-world use).
+The original roadmap is feature-complete: v0.4.0 is shipped and validated both ways.
+
+**Beyond v0.4.0 — obsidian-skills leverage runway** (full map in `codex-workflow/docs/obsidian-leverage.md`):
+
+- **v0.5.0 — obsidian-cli tranche (IN PROGRESS).** Live `base:query` vault access via the `obsidian` CLI. Validated feasible: the CLI talks to the running app and `base:query path="Tickets.base" view="Board" format=md` returns normalized rows. Build a read-only query skill + optional graceful-degradation bootstrap enhancement.
+- **v0.6.0 — json-canvas tranche.** Architecture canvases (dependency graphs, Code↔Vault diagram). Buildable headless; not started.
+- **v0.7.0 — defuddle tranche.** Clean research ingestion into `Knowledge/`. BLOCKED on installing the Defuddle CLI (`npx` not cached).
 
 ## Key decisions (confirmed)
 

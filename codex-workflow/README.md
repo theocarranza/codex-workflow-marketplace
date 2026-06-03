@@ -67,6 +67,11 @@ If you want to customize, drop a file at `.claude/codex-workflow.config.json` in
 | 0.2.0 | Init skills: `codex-init-workspace`, `codex-init-vault`, `codex-init-rules`. |
 | 0.3.0 | Mining skills: `codex-mine-style`, `codex-add-refactor-entry`. |
 | 0.4.0 (this) | Bases tranche: `codex-mine-bases` skill + frontmatter convention; `codex-init-vault` now emits `.base` dashboards (Tickets/Features/Agent_Sessions). |
+| 0.5.0 (planned) | obsidian-cli tranche: live `base:query` vault access. |
+| 0.6.0 (planned) | json-canvas tranche: Architecture canvases. |
+| 0.7.0 (planned) | defuddle tranche: clean research ingestion into `Knowledge/`. |
+
+See [`docs/obsidian-leverage.md`](./docs/obsidian-leverage.md) for how each tranche maps to the `obsidian-skills` plugin, and the open-runway status.
 
 ## Layout
 
@@ -88,6 +93,8 @@ codex-workflow/
 │   └── codex-mine-bases/SKILL.md
 ├── references/
 │   └── frontmatter-convention.md
+├── docs/
+│   └── obsidian-leverage.md
 ├── examples/
 │   └── codex-workflow.config.example.json
 └── README.md
