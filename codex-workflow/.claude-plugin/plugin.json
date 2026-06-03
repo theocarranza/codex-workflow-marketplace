@@ -1,7 +1,7 @@
 {
   "name": "codex-workflow",
-  "version": "0.9.0",
-  "description": "AI Codex workflow plugin: SessionStart Codex orientation injection, PreToolUse markdown allowlist + archetype naming enforcement, init skills (CLAUDE.md tree, archetype-driven Obsidian vault, .agent/rules starter set), mining skills (canonical style notes, refactor catalog entries, frontmatter backfill + Obsidian Bases dashboards), a read-only live vault-query skill, a Canvas relationship-map generator via the Obsidian CLI, and a Defuddle-based research-ingest skill. Four research-backed vault archetypes (software-project, research, personal-pkm, technical-docs).",
+  "version": "0.10.0",
+  "description": "AI Codex workflow plugin: SessionStart Codex orientation injection, PreToolUse markdown allowlist + archetype naming enforcement, init skills (CLAUDE.md tree, archetype-driven Obsidian vault, .agent/rules starter set), mining skills (canonical style notes, refactor catalog entries, frontmatter backfill + Obsidian Bases dashboards), a read-only live vault-query skill, a Canvas relationship-map generator, a Defuddle-based research-ingest skill, and a vault-lint skill that audits/fixes drift. Four research-backed vault archetypes (software-project, research, personal-pkm, technical-docs).",
   "author": {
     "name": "Théo Carranza"
   }

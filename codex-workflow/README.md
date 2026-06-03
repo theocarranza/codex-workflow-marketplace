@@ -2,9 +2,9 @@
 
 Portable hooks and skills for the AI Codex workflow: a project layout pairing a codebase with an Obsidian vault that serves as the canonical agent knowledge base.
 
-## What's in v0.9.0
+## What's in v0.10.0
 
-Three hooks, three init skills, three mining skills, one live query skill, one Canvas generator, one research-ingest skill, and **four research-backed vault archetypes** — all configurable per project with sensible zero-config defaults.
+Three hooks, three init skills, three mining skills, one live query skill, one Canvas generator, one research-ingest skill, one vault-lint skill, and **four research-backed vault archetypes** — all configurable per project with sensible zero-config defaults.
 
 ### Init skills
 
@@ -29,6 +29,10 @@ Three hooks, three init skills, three mining skills, one live query skill, one C
 ### Research skills
 
 - `/codex-workflow:codex-research-ingest <url>` — fetch an external web page as clean markdown with the [Defuddle](https://github.com/kepano/defuddle) CLI and file it into `Knowledge/` as a source-stamped `type: reference` note (with `source`/`domain`/`retrieved` frontmatter and a provenance callout). More than a fetch: it follows the frontmatter convention and slots into the Knowledge index. Requires `defuddle` (`npm install -g defuddle`).
+
+### Maintenance skills
+
+- `/codex-workflow:codex-vault-lint [vault] [--type <archetype>]` — audit an existing vault against its archetype spec and fix the drift: filename violations, frontmatter issues, stray files, and (semantic layer) mixed-language / near-duplicate / mangled notes. Proposes renames + frontmatter fixes, applies them with `git mv` and **wikilink repair** on confirmation, then re-scans. The retrofit path for vaults that predate archetypes. Backed by the deterministic scanner `scripts/vault-lint.py`.
 
 Every skill is an interactive walkthrough: it inspects current state, proposes a plan, asks the user to confirm, then writes. Existing files are never overwritten without explicit per-file approval.
 
@@ -97,7 +101,8 @@ If you want to customize, drop a file at `.claude/codex-workflow.config.json` in
 | 0.6.0 | json-canvas tranche: `codex-canvas-map` — Canvas relationship map for a hub note (links + backlinks) into `Architecture/`. |
 | 0.7.0 | defuddle tranche: `codex-research-ingest` — fetch a URL via Defuddle into a source-stamped `Knowledge/` reference note. |
 | 0.8.0 | Vault archetypes: 4 research-backed specs (software-project/research/personal-pkm/technical-docs); `codex-init-vault --type` scaffolds from spec + writes a `.codex-vault.json` marker. |
-| 0.9.0 (this) | `PreToolUse(Write)` archetype naming-enforcement hook — structural filename + frontmatter gating, marker-gated and fail-open. |
+| 0.9.0 | `PreToolUse(Write)` archetype naming-enforcement hook — structural filename + frontmatter gating, marker-gated and fail-open. |
+| 0.10.0 (this) | `codex-vault-lint` — audit a vault against its archetype spec (structural scanner + semantic layer) and apply renames/frontmatter fixes with backlink repair. |
 | 0.6.0 (planned) | json-canvas tranche: Architecture canvases. |
 | 0.7.0 (planned) | defuddle tranche: clean research ingestion into `Knowledge/`. |
 
@@ -124,7 +129,8 @@ codex-workflow/
 │   ├── codex-mine-bases/SKILL.md
 │   ├── codex-query-vault/SKILL.md
 │   ├── codex-canvas-map/SKILL.md
-│   └── codex-research-ingest/SKILL.md
+│   ├── codex-research-ingest/SKILL.md
+│   └── codex-vault-lint/SKILL.md
 ├── archetypes/
 │   ├── README.md            ← archetype spec format + marker
 │   ├── software-project.json
@@ -135,6 +141,8 @@ codex-workflow/
 │   └── frontmatter-convention.md
 ├── docs/
 │   └── obsidian-leverage.md
+├── scripts/
+│   └── vault-lint.py        ← deterministic vault scanner
 ├── examples/
 │   └── codex-workflow.config.example.json
 └── README.md
