@@ -2,9 +2,9 @@
 
 Portable hooks and skills for the AI Codex workflow: a project layout pairing a codebase with an Obsidian vault that serves as the canonical agent knowledge base.
 
-## What's in v0.3.0
+## What's in v0.4.0
 
-Two hooks, three init skills, two mining skills — all configurable per project with sensible zero-config defaults.
+Two hooks, three init skills, three mining skills — all configurable per project with sensible zero-config defaults.
 
 ### Init skills
 
@@ -16,6 +16,7 @@ Two hooks, three init skills, two mining skills — all configurable per project
 
 - `/codex-workflow:codex-mine-style` — interactive walkthrough that mines an author's commits (`git log --author=...`) to draft a canonical-style-examples Knowledge note with file/line anchors and an Agent Rules block.
 - `/codex-workflow:codex-add-refactor-entry <commit-hash>` — inspect a refactor commit and append a before/after entry to the Style Refactor Catalog with the principle applied.
+- `/codex-workflow:codex-mine-bases` — backfill the frontmatter convention across an existing vault and scaffold Obsidian Bases (`.base`) over `Tickets/`, `Features/`, `Agent_Sessions/`. Turns flat folders into live, queryable dashboards. Status is derived from the folder, never duplicated. See [`references/frontmatter-convention.md`](./references/frontmatter-convention.md) for the schema.
 
 Every skill is an interactive walkthrough: it inspects current state, proposes a plan, asks the user to confirm, then writes. Existing files are never overwritten without explicit per-file approval.
 
@@ -64,7 +65,8 @@ If you want to customize, drop a file at `.claude/codex-workflow.config.json` in
 | 0.1.0 | Hooks: SessionStart bootstrap + PreToolUse markdown allowlist. Config-driven, with autodetect fallback. |
 | 0.1.1 | Hooks: broaden `AI_Codex*/` autodetect glob; silently skip missing bootstrap files. |
 | 0.2.0 | Init skills: `codex-init-workspace`, `codex-init-vault`, `codex-init-rules`. |
-| 0.3.0 (this) | Mining skills: `codex-mine-style`, `codex-add-refactor-entry`. |
+| 0.3.0 | Mining skills: `codex-mine-style`, `codex-add-refactor-entry`. |
+| 0.4.0 (this) | Bases tranche: `codex-mine-bases` skill + frontmatter convention; `codex-init-vault` now emits `.base` dashboards (Tickets/Features/Agent_Sessions). |
 
 ## Layout
 
@@ -82,7 +84,10 @@ codex-workflow/
 │   ├── codex-init-vault/SKILL.md
 │   ├── codex-init-rules/SKILL.md
 │   ├── codex-mine-style/SKILL.md
-│   └── codex-add-refactor-entry/SKILL.md
+│   ├── codex-add-refactor-entry/SKILL.md
+│   └── codex-mine-bases/SKILL.md
+├── references/
+│   └── frontmatter-convention.md
 ├── examples/
 │   └── codex-workflow.config.example.json
 └── README.md

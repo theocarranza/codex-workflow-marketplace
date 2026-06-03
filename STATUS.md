@@ -2,9 +2,9 @@
 
 Snapshot of the in-flight plugin build, captured for cross-session resumption. Update when state changes meaningfully.
 
-## Where we are (2026-05-13)
+## Where we are (2026-06-02)
 
-**v0.3.0 — feature-complete against the original roadmap. All three tranches (hooks, init skills, mining skills) shipped and pushed. v0.2.0 validated live (3 skills visible in `/skills`, `locked by author`).**
+**v0.4.0 — Bases tranche built, awaiting user-side refresh + push. Adds the `codex-mine-bases` skill, the frontmatter convention reference, and `.base` emission in `codex-init-vault`. Prototyped live on `AI_Codex_Aplicatudo` first (`Tickets.base` renders; status derived from folder via `file.folder.replace`), then extracted. v0.1.0–v0.3.0 all shipped and pushed.**
 
 ### Done
 
@@ -42,9 +42,17 @@ Snapshot of the in-flight plugin build, captured for cross-session resumption. U
 - Plugin README rewritten to surface both layers; roadmap table marks v0.3.0 shipped (no more "(planned)" rows).
 - Manifests bumped to 0.3.0; `jq -e` clean.
 
+**v0.4.0 — Bases tranche (built locally, not yet committed/pushed).**
+- New reference `codex-workflow/references/frontmatter-convention.md` — the property schema (`ticket`/`type`/`area`/`stack`/`tags`/`created`), the core rule (**status encoded by folder, never in frontmatter**), and the tested Bases formula gotcha (no list `.last()`/index — derive the status lane with `file.folder.replace("Tickets/", "")`, not `split("/").last()`).
+- New skill `codex-workflow/skills/codex-mine-bases/SKILL.md` — interactive: survey vault → confirm vocabulary → backfill frontmatter on notes lacking it (safe prepend, skips notes that already have `---`) → write `Tickets.base`/`Features.base`/`Agent_Sessions.base` (each with a self-tracking "Needs metadata" view) → optional in-vault convention note. `disable-model-invocation: true`.
+- `codex-init-vault/SKILL.md` updated: Tickets skeleton now `Active/Ready/Closed/Resolved`; emits the three `.base` dashboards; `.gitkeep` list, Agent_Orientation slash-command table, and Agent Guidelines updated for the convention.
+- Plugin README rewritten to surface the Bases tranche; roadmap table marks v0.4.0 shipped. Manifests bumped 0.3.0 → 0.4.0.
+- **Live prototype on the real vault** (kept): `AI_Codex_Aplicatudo/Tickets.base` + frontmatter backfilled on `Feature 6196` and `feature-5632`. Board groups by the four status lanes; user confirmed it renders.
+
 ### Not done (next steps in order)
 
-1. **User-side refresh of v0.3.0.** `/plugin marketplace update codex-workflow-marketplace` (expect "1 plugin bumped") then `/reload-plugins`. Verify `/codex-workflow:codex-mine-style` and `:codex-add-refactor-entry` appear in `/skills` alongside the v0.2.0 three.
+1. **Commit + push v0.4.0**, then **user-side refresh.** `/plugin marketplace update codex-workflow-marketplace` (expect "1 plugin bumped") then `/reload-plugins`. Verify `/codex-workflow:codex-mine-bases` appears in `/skills` alongside the other five. (Earlier tranches v0.1.0–v0.3.0 already validated live.)
+2. **Validate `codex-mine-bases` end-to-end** against a vault other than the prototype, or backfill the remaining ~15 `aplicatudo` tickets + add `Features.base`/`Agent_Sessions.base` via the skill rather than by hand.
 2. **Deferred (parked by user):** cleanup of the inline hooks in `aplicatudo-monorepo/.claude/` (would otherwise double-fire alongside plugin hooks). Tracked in the 2026-05-13 06:56:37 session's Pending Tasks.
 
 The original roadmap is feature-complete after step 1. Future versions are open-ended (additional skills, refinements based on real-world use).

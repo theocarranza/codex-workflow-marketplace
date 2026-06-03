@@ -42,14 +42,20 @@ List the files and directories that will be created. Confirm before writing.
 │   └── README.md
 ├── Tickets/
 │   ├── Active/
+│   ├── Ready/
+│   ├── Closed/
 │   └── Resolved/
 ├── Architecture/
 ├── Features/
 ├── Agent_Reports/
-└── assets/
+├── assets/
+├── Tickets.base
+├── Features.base
+└── Agent_Sessions.base
 ```
 
-Directories without seed files are kept by adding a placeholder `.gitkeep`.
+Directories without seed files are kept by adding a placeholder `.gitkeep`. The three
+`.base` files are vault dashboards over the collection folders (see Step 4).
 
 ## Step 4 — Write the seed files
 
@@ -121,7 +127,7 @@ Open the new record at the **first material edit**, not retroactively. Append up
 
 1. **Always Update**: when a feature lands or an ADR is reached, update the vault synchronously.
 2. **Strict Syntax**: use Obsidian `[[Wikilinks]]` for cross-referencing.
-3. **Metadata**: every new note includes YAML frontmatter with `date`, `type`, and `tags`.
+3. **Metadata**: every new note includes YAML frontmatter — see the frontmatter convention (`type`, `tags`, plus `ticket`/`area`/`stack` where relevant). **Status is encoded by folder** (e.g. `Tickets/Active/`), never duplicated in frontmatter.
 4. **Visuals**: save generated diagrams to `assets/` and link them natively.
 ```
 
@@ -165,6 +171,7 @@ Single-file workspace map. Read this immediately after the codex `README.md`.
 | `/codex-workflow:codex-init-workspace` | Scaffold the CLAUDE.md tree. |
 | `/codex-workflow:codex-init-vault` | Scaffold this vault skeleton. |
 | `/codex-workflow:codex-init-rules` | Drop starter `.agent/rules/*.md` templates. |
+| `/codex-workflow:codex-mine-bases` | Backfill frontmatter + scaffold Base dashboards over the vault. |
 ```
 
 ### `<vault>/Agent_Sessions/README.md`
@@ -198,9 +205,79 @@ Operational log of active and historical agent sessions.
 - *(no sessions yet)*
 ```
 
+### Base dashboards (`*.base`)
+
+Write three Obsidian Bases at the vault root, following the property schema in
+`${CLAUDE_PLUGIN_ROOT}/references/frontmatter-convention.md`. They render as live tables in
+Obsidian. Status is derived from the folder, never duplicated in frontmatter. Each carries a
+"Needs metadata" view so schema adoption is self-tracking.
+
+`Tickets.base` (status comes from the `Active/Ready/Closed/Resolved` subfolders):
+
+```yaml
+filters:
+  and:
+    - file.inFolder("Tickets")
+    - 'file.ext == "md"'
+formulas:
+  # Parent folder minus the prefix = status lane. NOT split().last() — see reference.
+  status: 'file.folder.replace("Tickets/", "")'
+  age_days: '(now() - file.ctime).days'
+  has_meta: 'if(type, "✅", "⚠️ no frontmatter")'
+properties:
+  ticket: { displayName: "#" }
+  formula.status: { displayName: Status }
+  formula.age_days: { displayName: "Age (d)" }
+  formula.has_meta: { displayName: Meta }
+views:
+  - type: table
+    name: "Board"
+    groupBy: { property: formula.status, direction: ASC }
+    order: [file.name, ticket, type, area, tags, formula.age_days]
+  - type: table
+    name: "Needs metadata"
+    filters: { not: [type] }
+    order: [file.name, formula.status, file.mtime]
+```
+
+`Features.base` (flat folder — group by `area` instead of status):
+
+```yaml
+filters:
+  and:
+    - file.inFolder("Features")
+    - 'file.ext == "md"'
+views:
+  - type: table
+    name: "Features"
+    groupBy: { property: area, direction: ASC }
+    order: [file.name, ticket, type, area, tags]
+  - type: table
+    name: "Needs metadata"
+    filters: { not: [type] }
+    order: [file.name, file.mtime]
+```
+
+`Agent_Sessions.base` (chronological — the `YYYY-MM-DD-HHMMSS-` prefix sorts naturally):
+
+```yaml
+filters:
+  and:
+    - file.inFolder("Agent_Sessions")
+    - 'file.ext == "md"'
+    - 'file.name != "README"'
+views:
+  - type: table
+    name: "Sessions"
+    order: [file.name, created, type, tags]
+```
+
+A `.base` that fails to parse renders blank in Obsidian — validate each as YAML before finishing
+(`python3 -c "import yaml; yaml.safe_load(open(p))"`).
+
 ### `.gitkeep` files
 
-Add empty `.gitkeep` to `Tickets/Active/`, `Tickets/Resolved/`, `Architecture/`, `Features/`, `Agent_Reports/`, and `assets/` so the empty directories survive `git add`.
+Add empty `.gitkeep` to `Tickets/Active/`, `Tickets/Ready/`, `Tickets/Closed/`, `Tickets/Resolved/`, `Architecture/`, `Features/`, `Agent_Reports/`, and `assets/` so the empty directories survive `git add`.
 
 ## Step 5 — Recommend follow-ups
 
@@ -209,7 +286,8 @@ After writing, tell the user:
 - Run `/codex-workflow:codex-init-workspace` if the project doesn't have a CLAUDE.md tree yet — the tree should reference this vault.
 - Run `/codex-workflow:codex-init-rules` to drop a starter `.agent/rules/*.md` set if you don't already have one.
 - If the vault folder name doesn't start with `AI_Codex`, drop a `.claude/codex-workflow.config.json` setting `codex.folder` so the plugin's autodetect can find it.
-- Open the vault in Obsidian (point a vault at the folder) to take advantage of wikilink navigation.
+- Open the vault in Obsidian (point a vault at the folder) to take advantage of wikilink navigation and the `.base` dashboards.
+- Run `/codex-workflow:codex-mine-bases` once the vault has real notes to backfill the frontmatter schema and confirm the Base dashboards render.
 
 ## Notes
 

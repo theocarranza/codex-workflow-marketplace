@@ -1,7 +1,7 @@
 {
   "name": "codex-workflow",
-  "version": "0.3.0",
-  "description": "AI Codex workflow plugin: SessionStart Codex orientation injection, PreToolUse markdown allowlist, init skills (CLAUDE.md tree, Obsidian vault, .agent/rules starter set), and mining skills (canonical style notes, refactor catalog entries).",
+  "version": "0.4.0",
+  "description": "AI Codex workflow plugin: SessionStart Codex orientation injection, PreToolUse markdown allowlist, init skills (CLAUDE.md tree, Obsidian vault, .agent/rules starter set), and mining skills (canonical style notes, refactor catalog entries, frontmatter backfill + Obsidian Bases dashboards).",
   "author": {
     "name": "Théo Carranza"
   }
