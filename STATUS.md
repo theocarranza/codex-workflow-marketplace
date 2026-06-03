@@ -4,7 +4,7 @@ Snapshot of the in-flight plugin build, captured for cross-session resumption. U
 
 ## Where we are (2026-06-02)
 
-**v0.4.0 — Bases tranche built, awaiting user-side refresh + push. Adds the `codex-mine-bases` skill, the frontmatter convention reference, and `.base` emission in `codex-init-vault`. Prototyped live on `AI_Codex_Aplicatudo` first (`Tickets.base` renders; status derived from folder via `file.folder.replace`), then extracted. v0.1.0–v0.3.0 all shipped and pushed.**
+**v0.4.0 — Bases tranche shipped, pushed, and validated both ways. Adds the `codex-mine-bases` skill, the frontmatter convention reference, and `.base` emission in `codex-init-vault`. Validated (a) migrate-existing: full `AI_Codex_Aplicatudo` migration — 100% frontmatter coverage across Tickets/Features/Agent_Sessions, 9 backfilled + 12 legacy notes normalized (stale `status:` drift removed, id fields unified to `ticket`), 3 Bases rendering live in Obsidian; and (b) cold-start: a fresh `codex-init-vault` scaffold whose Board populates and whose "Needs metadata" view correctly catches a frontmatter-less note. All tranches v0.1.0–v0.4.0 shipped and pushed.**
 
 ### Done
 
@@ -49,13 +49,18 @@ Snapshot of the in-flight plugin build, captured for cross-session resumption. U
 - Plugin README rewritten to surface the Bases tranche; roadmap table marks v0.4.0 shipped. Manifests bumped 0.3.0 → 0.4.0.
 - **Live prototype on the real vault** (kept): `AI_Codex_Aplicatudo/Tickets.base` + frontmatter backfilled on `Feature 6196` and `feature-5632`. Board groups by the four status lanes; user confirmed it renders.
 
+**v0.4.0 validation (both paths exercised).**
+- Committed `41a6bc6`, pushed to `origin/main`; user ran `/plugin marketplace update` + `/reload-plugins`.
+- **Migrate-existing path** — drove `codex-mine-bases` by hand over `AI_Codex_Aplicatudo`: backfilled the 7 Tickets + 2 Features lacking frontmatter, normalized 12 legacy notes (renamed `work_item_id`/`ticket_id`/`id` → `ticket`, dropped stale `status:` incl. two `status: active` notes mis-sitting in `Resolved/`, stripped folder-encoded tags, added `area`/`stack`), wrote `Features.base` + `Agent_Sessions.base`, removed an empty `Untitled.md` stub, moved a misfiled ValueNotifier article to `Knowledge/`. Result: 63 frontmatter blocks parse clean, all 3 Bases render in Obsidian (Obsidian normalized them on open). Vocab settled to `type ∈ {feature, tech-debt, ticket}`, `area ∈ {terms-of-use, attendance, calendar, onboarding}`.
+- **Cold-start path** — scaffolded a fresh vault per `codex-init-vault` v0.4.0 in `/tmp`; Board populated from sample tickets grouped by status folder, and a deliberately bare note surfaced only in "Needs metadata". Confirms the from-scratch flow.
+- **Finding folded into the reference:** Obsidian rewrites `.base` files on open — strips comments, normalizes flow-style to block-style, adds `columnSize` on column resize. Emitted comments are cosmetic-only.
+
 ### Not done (next steps in order)
 
-1. **Commit + push v0.4.0**, then **user-side refresh.** `/plugin marketplace update codex-workflow-marketplace` (expect "1 plugin bumped") then `/reload-plugins`. Verify `/codex-workflow:codex-mine-bases` appears in `/skills` alongside the other five. (Earlier tranches v0.1.0–v0.3.0 already validated live.)
-2. **Validate `codex-mine-bases` end-to-end** against a vault other than the prototype, or backfill the remaining ~15 `aplicatudo` tickets + add `Features.base`/`Agent_Sessions.base` via the skill rather than by hand.
+1. **Commit the `aplicatudo` vault migration** in the monorepo repo (separate from this plugin repo) — the backfill/normalization edits are currently uncommitted working-tree changes. (User's content; left for the user to commit.)
 2. **Deferred (parked by user):** cleanup of the inline hooks in `aplicatudo-monorepo/.claude/` (would otherwise double-fire alongside plugin hooks). Tracked in the 2026-05-13 06:56:37 session's Pending Tasks.
 
-The original roadmap is feature-complete after step 1. Future versions are open-ended (additional skills, refinements based on real-world use).
+The original roadmap is feature-complete: v0.4.0 is shipped and validated both ways. Future versions are open-ended (additional skills, refinements based on real-world use).
 
 ## Key decisions (confirmed)
 

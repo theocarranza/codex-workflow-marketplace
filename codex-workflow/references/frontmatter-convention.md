@@ -69,6 +69,19 @@ each vault otherwise rediscovers them:
 2. **Duration is not a number.** Subtracting dates yields a Duration; access `.days`
    before applying `.round()` etc.: `'(now() - file.ctime).days'`.
 
+## Obsidian normalizes `.base` files on open
+
+Obsidian rewrites a `.base` the first time it loads it. Expect:
+
+- **Comments are stripped.** Any `#` comment headers the skills emit vanish — they're
+  authoring aids only, never load-bearing.
+- **Flow style becomes block style.** `{ displayName: "#" }` and `[a, b]` are rewritten
+  to multi-line block form.
+- **`columnSize` is added** once you resize a column in the UI.
+
+None of this changes behavior — the file stays valid and equivalent. Don't fight it: write
+whatever's clearest, and let Obsidian canonicalize. Just don't rely on comments persisting.
+
 ## Why this matters for agents
 
 With the schema in place, an agent answers "what's in flight?" by querying a Base
