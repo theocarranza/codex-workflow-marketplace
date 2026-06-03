@@ -25,7 +25,7 @@ exploited and shipped as v0.4.0.
 
 | Item | obsidian-skill | Value | Status | Next step |
 |---|---|---|---|---|
-| **A. Live vault queries** — wire SessionStart / mining skills to `obsidian base:query` + `search` instead of `cat`/raw reads | **`obsidian-cli`** | High — makes the vault a live, queryable knowledge source; complements the markdown allowlist | **Validated, unblocked.** CLI talks to the running app; `base:query path="Tickets.base" view="Board" format=md` returns normalized rows | Build the cli tranche (in progress) |
+| **A. Live vault queries** via `obsidian base:query` + `search` instead of `cat`/raw reads | **`obsidian-cli`** | High — makes the vault a live, queryable knowledge source; complements the markdown allowlist | **SHIPPED v0.5.0** as the read-only `codex-query-vault` skill; dogfooded live | Optional: opt-in SessionStart enhancement to inject open-ticket snapshot |
 | **B. Architecture canvases** — visual maps in `Architecture/` (dependency graphs, the Code↔Vault bifurcation diagram) | **`json-canvas`** | Medium | Buildable (pure JSON file generation, no external dep) | Add a `codex-*` canvas skill; not started |
 | **C. Research ingestion** — route external-doc research into `Knowledge/` as clean, source-stamped notes instead of WebFetch dumps | **`defuddle`** | Medium | **Blocked** — Defuddle CLI not installed (`npx` not cached) | Install Defuddle CLI first, then add an ingest skill |
 

@@ -64,7 +64,7 @@ The original roadmap is feature-complete: v0.4.0 is shipped and validated both w
 
 **Beyond v0.4.0 — obsidian-skills leverage runway** (full map in `codex-workflow/docs/obsidian-leverage.md`):
 
-- **v0.5.0 — obsidian-cli tranche (IN PROGRESS).** Live `base:query` vault access via the `obsidian` CLI. Validated feasible: the CLI talks to the running app and `base:query path="Tickets.base" view="Board" format=md` returns normalized rows. Build a read-only query skill + optional graceful-degradation bootstrap enhancement.
+- **v0.5.0 — obsidian-cli tranche (SHIPPED, validated; awaiting push + user refresh).** New read-only skill `codex-query-vault` wraps the `obsidian` CLI for live vault state: `base:query` (open tickets via path-lane, features by area, recent sessions), `search`/`search:context`, `backlinks`. First skill that **allows model invocation** (read-only). Degrades gracefully when Obsidian isn't running. Dogfooded against the live `AI_Codex_Aplicatudo`: returns the 3 open tickets (1 Active, 2 Ready) correctly. Manifests bumped 0.4.0 → 0.5.0. CLI gotchas captured: bases resolve by `path=` not `file=`; `base:views` is unreliable; Board JSON has no `status` column (read it off `path`).
 - **v0.6.0 — json-canvas tranche.** Architecture canvases (dependency graphs, Code↔Vault diagram). Buildable headless; not started.
 - **v0.7.0 — defuddle tranche.** Clean research ingestion into `Knowledge/`. BLOCKED on installing the Defuddle CLI (`npx` not cached).
 

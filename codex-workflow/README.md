@@ -2,9 +2,9 @@
 
 Portable hooks and skills for the AI Codex workflow: a project layout pairing a codebase with an Obsidian vault that serves as the canonical agent knowledge base.
 
-## What's in v0.4.0
+## What's in v0.5.0
 
-Two hooks, three init skills, three mining skills — all configurable per project with sensible zero-config defaults.
+Two hooks, three init skills, three mining skills, and one live query skill — all configurable per project with sensible zero-config defaults.
 
 ### Init skills
 
@@ -17,6 +17,10 @@ Two hooks, three init skills, three mining skills — all configurable per proje
 - `/codex-workflow:codex-mine-style` — interactive walkthrough that mines an author's commits (`git log --author=...`) to draft a canonical-style-examples Knowledge note with file/line anchors and an Agent Rules block.
 - `/codex-workflow:codex-add-refactor-entry <commit-hash>` — inspect a refactor commit and append a before/after entry to the Style Refactor Catalog with the principle applied.
 - `/codex-workflow:codex-mine-bases` — backfill the frontmatter convention across an existing vault and scaffold Obsidian Bases (`.base`) over `Tickets/`, `Features/`, `Agent_Sessions/`. Turns flat folders into live, queryable dashboards. Status is derived from the folder, never duplicated. See [`references/frontmatter-convention.md`](./references/frontmatter-convention.md) for the schema.
+
+### Query skills
+
+- `/codex-workflow:codex-query-vault` — **read-only** live query of the vault via the Obsidian CLI: list/query Bases (open tickets, features by area, recent sessions), full-text `search`, and `backlinks` — instead of raw file reads. The sanctioned read channel that complements the markdown allowlist. Requires Obsidian running with the vault open; degrades gracefully when it isn't. Unlike the side-effecting `codex-*` skills, this one **allows model invocation** (it's read-only), so agents can reach for it whenever they need vault state.
 
 Every skill is an interactive walkthrough: it inspects current state, proposes a plan, asks the user to confirm, then writes. Existing files are never overwritten without explicit per-file approval.
 
@@ -66,8 +70,8 @@ If you want to customize, drop a file at `.claude/codex-workflow.config.json` in
 | 0.1.1 | Hooks: broaden `AI_Codex*/` autodetect glob; silently skip missing bootstrap files. |
 | 0.2.0 | Init skills: `codex-init-workspace`, `codex-init-vault`, `codex-init-rules`. |
 | 0.3.0 | Mining skills: `codex-mine-style`, `codex-add-refactor-entry`. |
-| 0.4.0 (this) | Bases tranche: `codex-mine-bases` skill + frontmatter convention; `codex-init-vault` now emits `.base` dashboards (Tickets/Features/Agent_Sessions). |
-| 0.5.0 (planned) | obsidian-cli tranche: live `base:query` vault access. |
+| 0.4.0 | Bases tranche: `codex-mine-bases` skill + frontmatter convention; `codex-init-vault` now emits `.base` dashboards (Tickets/Features/Agent_Sessions). |
+| 0.5.0 (this) | obsidian-cli tranche: `codex-query-vault` — read-only live `base:query`/`search`/`backlinks` vault access. |
 | 0.6.0 (planned) | json-canvas tranche: Architecture canvases. |
 | 0.7.0 (planned) | defuddle tranche: clean research ingestion into `Knowledge/`. |
 
@@ -90,7 +94,8 @@ codex-workflow/
 │   ├── codex-init-rules/SKILL.md
 │   ├── codex-mine-style/SKILL.md
 │   ├── codex-add-refactor-entry/SKILL.md
-│   └── codex-mine-bases/SKILL.md
+│   ├── codex-mine-bases/SKILL.md
+│   └── codex-query-vault/SKILL.md
 ├── references/
 │   └── frontmatter-convention.md
 ├── docs/
