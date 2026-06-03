@@ -2,14 +2,14 @@
 
 Portable hooks and skills for the AI Codex workflow: a project layout pairing a codebase with an Obsidian vault that serves as the canonical agent knowledge base.
 
-## What's in v0.7.0
+## What's in v0.8.0
 
-Two hooks, three init skills, three mining skills, one live query skill, one Canvas generator, and one research-ingest skill — all configurable per project with sensible zero-config defaults.
+Two hooks, three init skills, three mining skills, one live query skill, one Canvas generator, one research-ingest skill, and **four research-backed vault archetypes** — all configurable per project with sensible zero-config defaults.
 
 ### Init skills
 
 - `/codex-workflow:codex-init-workspace` — scaffold the CLAUDE.md tree (root + per-project) by inspecting `package.json` / `pubspec.yaml`.
-- `/codex-workflow:codex-init-vault` — scaffold the Obsidian vault skeleton (README, Knowledge/, Agent_Sessions/, Tickets/, Architecture/, Features/, Agent_Reports/, assets/).
+- `/codex-workflow:codex-init-vault [--type <archetype>]` — scaffold an Obsidian vault from a research-backed **archetype**: `software-project` (default), `research` (Zettelkasten+PARA), `personal-pkm` (PARA), or `technical-docs` (Diataxis). Reads the archetype spec for folder structure + naming + frontmatter, scaffolds the skeleton, and writes a `.codex-vault.json` marker. See [`archetypes/README.md`](./archetypes/README.md).
 - `/codex-workflow:codex-init-rules` — drop a starter set of `.agent/rules/*.md` template files (`strict-implementation-lock`, `rules-architect-protocol`, `rules-git-workflow`, `rules-date-time-handling`).
 
 ### Mining skills
@@ -81,7 +81,8 @@ If you want to customize, drop a file at `.claude/codex-workflow.config.json` in
 | 0.4.0 | Bases tranche: `codex-mine-bases` skill + frontmatter convention; `codex-init-vault` now emits `.base` dashboards (Tickets/Features/Agent_Sessions). |
 | 0.5.0 | obsidian-cli tranche: `codex-query-vault` — read-only live `base:query`/`search`/`backlinks` vault access. |
 | 0.6.0 | json-canvas tranche: `codex-canvas-map` — Canvas relationship map for a hub note (links + backlinks) into `Architecture/`. |
-| 0.7.0 (this) | defuddle tranche: `codex-research-ingest` — fetch a URL via Defuddle into a source-stamped `Knowledge/` reference note. |
+| 0.7.0 | defuddle tranche: `codex-research-ingest` — fetch a URL via Defuddle into a source-stamped `Knowledge/` reference note. |
+| 0.8.0 (this) | Vault archetypes: 4 research-backed specs (software-project/research/personal-pkm/technical-docs); `codex-init-vault --type` scaffolds from spec + writes a `.codex-vault.json` marker. |
 | 0.6.0 (planned) | json-canvas tranche: Architecture canvases. |
 | 0.7.0 (planned) | defuddle tranche: clean research ingestion into `Knowledge/`. |
 
@@ -108,6 +109,12 @@ codex-workflow/
 │   ├── codex-query-vault/SKILL.md
 │   ├── codex-canvas-map/SKILL.md
 │   └── codex-research-ingest/SKILL.md
+├── archetypes/
+│   ├── README.md            ← archetype spec format + marker
+│   ├── software-project.json
+│   ├── research.json
+│   ├── personal-pkm.json
+│   └── technical-docs.json
 ├── references/
 │   └── frontmatter-convention.md
 ├── docs/

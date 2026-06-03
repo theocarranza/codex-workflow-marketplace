@@ -70,6 +70,14 @@ The original roadmap is feature-complete: v0.4.0 is shipped and validated both w
 
 **Runway complete.** All three obsidian-skills leverage items (A obsidian-cli, B json-canvas, C defuddle) are shipped and validated, on top of the v0.4.0 bases+markdown work. Every one of the five obsidian-skills is now leveraged by codex-workflow.
 
+## Vault archetypes initiative (v0.8.0+)
+
+Motivated by an audit of the live vault showing severe naming/structure drift (30/69 files off-pattern) and the realization that folder structure was never researched. Decisions: ship all four archetypes; **hard hook only** for enforcement; build a linter. Research synthesized into `codex-workflow/docs/obsidian-leverage.md` references + `archetypes/README.md` (PARA / Zettelkasten / MOC / Diataxis; flat-over-deep; folders=where, tags=what; literature-driven naming, not vault-driven).
+
+- **v0.8.0 — archetype specs + spec-driven init (SHIPPED, validated; awaiting push + user refresh).** Four machine-readable specs in `codex-workflow/archetypes/*.json` (folders[], naming rules[], frontmatter rules[]) + format `README.md`. Naming chosen from the literature (Obsidian-native Title Case for notes; Nygard ADR convention for `Architecture/ADR`; citekeys for Literature; kebab for Diataxis docs; timestamp IDs for journals). `codex-init-vault` rewritten to be archetype-driven: `--type`, scaffolds folders from the spec, writes a `.codex-vault.json` marker (type+specVersion) that the hook/linter key off. Dogfooded: all four archetypes scaffold cleanly; software-project spec flags exactly the 30 off-pattern files in the live vault. Manifests 0.7.0 → 0.8.0.
+- **v0.9.0 — PreToolUse(Write) structural-enforcement hook (NEXT).** Reads the marker → the spec; rejects wrong filename shape / missing-required / forbidden frontmatter; fail-open outside a marked vault.
+- **v0.10.0 — codex-vault-lint skill.** Semantic audit (language, duplicates, stray files) + rename/fix proposals.
+
 ## Key decisions (confirmed)
 
 - **Plugin name:** `codex-workflow`

@@ -1,0 +1,29 @@
+{
+  "type": "technical-docs",
+  "title": "Technical Documentation Vault (Diátaxis)",
+  "description": "The Diátaxis framework: four documentation modes serving distinct user needs — Tutorials (learning), How-to (goals), Reference (information), Explanation (understanding). Kebab-case filenames for URL/site-generator friendliness.",
+  "folders": [
+    { "path": "Tutorials", "purpose": "Learning-oriented lessons that take a newcomer by the hand" },
+    { "path": "How-to", "purpose": "Goal-oriented recipes that solve a specific problem" },
+    { "path": "Reference", "purpose": "Information-oriented technical description (APIs, configs)" },
+    { "path": "Explanation", "purpose": "Understanding-oriented discussion of concepts and rationale" },
+    { "path": "Meta", "purpose": "Templates, scripts, style guide, vault plumbing" },
+    { "path": "assets", "purpose": "Diagrams, screenshots, binary attachments" }
+  ],
+  "naming": {
+    "language": "en",
+    "rules": [
+      { "match": "Tutorials/**", "filename": "^[a-z0-9-]+$", "style": "kebab-case", "example": "getting-started" },
+      { "match": "How-to/**", "filename": "^[a-z0-9-]+$", "style": "kebab-case (often verb-led)", "example": "configure-sso" },
+      { "match": "Reference/**", "filename": "^[a-z0-9-]+$", "style": "kebab-case", "example": "rest-api-endpoints" },
+      { "match": "Explanation/**", "filename": "^[a-z0-9-]+$", "style": "kebab-case", "example": "why-event-sourcing" }
+    ],
+    "default": { "filename": "^[a-z0-9-]+$", "style": "kebab-case" }
+  },
+  "frontmatter": [
+    { "match": "Tutorials/**", "required": ["type"], "optional": ["tags", "updated", "audience"], "forbidden": [] },
+    { "match": "How-to/**", "required": ["type"], "optional": ["tags", "updated"], "forbidden": [] },
+    { "match": "Reference/**", "required": ["type"], "optional": ["tags", "updated", "version"], "forbidden": [] },
+    { "match": "Explanation/**", "required": ["type"], "optional": ["tags", "updated"], "forbidden": [] }
+  ]
+}

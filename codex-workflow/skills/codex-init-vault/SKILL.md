@@ -1,299 +1,131 @@
 ---
 name: codex-init-vault
-description: Scaffold an AI Codex Obsidian vault skeleton (README, Knowledge/, Agent_Sessions/, Tickets/, Architecture/, Features/, Agent_Reports/, assets/). Use when a project adopting the codex workflow has no vault yet, or when the user asks to "create the codex vault" / "scaffold the agent knowledge vault".
+description: Scaffold an AI Codex Obsidian vault from a research-backed archetype (software-project, research, personal-pkm, technical-docs). Reads the archetype spec for folder structure and conventions, scaffolds the skeleton, writes a .codex-vault.json marker, and seeds archetype-appropriate files. Use when a project adopting the codex workflow needs a new vault, or the user asks to "create the codex vault" / "scaffold the agent knowledge vault".
 disable-model-invocation: true
-allowed-tools: Read Write Glob Bash(ls *) Bash(mkdir *) Bash(basename *)
+argument-hint: [--type <software-project|research|personal-pkm|technical-docs>]
+allowed-tools: Read Write Glob Bash(ls *) Bash(mkdir *) Bash(basename *) Bash(jq *) Bash(date *) Bash(cat *)
 ---
 
-# Scaffold the AI Codex Obsidian vault
+# Scaffold an AI Codex vault from an archetype
 
-Interactive walkthrough. Inspect, propose, confirm, write.
+Interactive walkthrough. Choose archetype, inspect, propose, confirm, write. The archetype
+spec is the single source of truth for folder structure, naming, and frontmatter — the same
+spec the `PreToolUse(Write)` enforcement hook and `codex-vault-lint` read, so scaffold,
+enforcement, and audit never disagree.
 
-## Step 1 — Decide the vault folder name
+## Step 1 — Choose the archetype
 
-Default name: `AI_Codex_<ProjectName>`, where `<ProjectName>` is the project root directory's basename in CamelCase.
+Take `--type <archetype>` from `$ARGUMENTS`, or ask. See
+`${CLAUDE_PLUGIN_ROOT}/archetypes/README.md` for the full rationale.
 
-Show the user the proposed name and let them override. Examples:
+| `--type` | For | Basis |
+|---|---|---|
+| `software-project` | Agile/XP codebases (default) | Project + knowledge hybrid; status-by-folder |
+| `research` | Academic / research projects | Zettelkasten + PARA + MOCs |
+| `personal-pkm` | General knowledge management | PARA |
+| `technical-docs` | Product/library documentation | Diataxis |
 
-- Repo `aplicatudo-monorepo` → `AI_Codex_Aplicatudo`.
-- Repo `acme-platform` → `AI_Codex_Acme` (or `AI_Codex_AcmePlatform`).
-- Simple single-name workspaces can use bare `AI_Codex`.
+Load and sanity-check the spec:
 
-The `codex-workflow` plugin's `SessionStart` hook autodetects via glob `AI_Codex*/`, so any name starting with `AI_Codex` is picked up zero-config. Other names require setting `codex.folder` in `.claude/codex-workflow.config.json`.
-
-## Step 2 — Refuse if a vault already exists at that name
-
-Check with `ls` or Glob. If the folder exists, **do not overwrite**. Ask the user whether to:
-
-- pick a different name,
-- add missing skeleton files inside the existing folder (Step 4 below, but skipping every file that already exists),
-- abort.
-
-## Step 3 — Propose the skeleton
-
-List the files and directories that will be created. Confirm before writing.
-
-```
-<vault>/
-├── README.md
-├── Knowledge/
-│   └── Agent_Orientation.md
-├── Agent_Sessions/
-│   └── README.md
-├── Tickets/
-│   ├── Active/
-│   ├── Ready/
-│   ├── Closed/
-│   └── Resolved/
-├── Architecture/
-├── Features/
-├── Agent_Reports/
-├── assets/
-├── Tickets.base
-├── Features.base
-└── Agent_Sessions.base
+```bash
+TYPE=software-project                                   # from --type or the user's choice
+SPEC="${CLAUDE_PLUGIN_ROOT}/archetypes/${TYPE}.json"
+jq -e . "$SPEC" >/dev/null && jq -r '.title + " — " + .description' "$SPEC"
 ```
 
-Directories without seed files are kept by adding a placeholder `.gitkeep`. The three
-`.base` files are vault dashboards over the collection folders (see Step 4).
+## Step 2 — Decide the vault folder name
 
-## Step 4 — Write the seed files
+Default `AI_Codex_<ProjectName>` (ProjectName = repo basename in CamelCase). The `SessionStart`
+hook autodetects via glob `AI_Codex*/`, so any `AI_Codex*` name is zero-config; other names need
+`codex.folder` in `.claude/codex-workflow.config.json`. Show the proposed name; let the user override.
 
-### `<vault>/README.md`
+## Step 3 — Refuse if a vault already exists at that name
+
+Check with `ls`/Glob. If it exists, do not overwrite — offer to pick another name, add only the
+missing skeleton pieces (Step 5, skipping anything present), or abort.
+
+## Step 4 — Show the plan and confirm
+
+List exactly what will be created, from the spec, and confirm before writing:
+
+```bash
+echo "Folders:";  jq -r '.folders[] | "  \(.path)/  — \(.purpose)"' "$SPEC"
+echo "Marker:   .codex-vault.json  (records type=$TYPE)"
+echo "Naming:";  jq -r '.naming.rules[] | "  \(.match) → \(.style)"' "$SPEC"
+```
+
+## Step 5 — Scaffold (spec-driven)
+
+Create every folder with a `.gitkeep`, then write the marker. The marker is how the enforcement
+hook and `codex-vault-lint` know which archetype governs this vault — do not skip it.
+
+```bash
+while IFS= read -r p; do mkdir -p "$VAULT/$p"; : > "$VAULT/$p/.gitkeep"; done < <(jq -r '.folders[].path' "$SPEC")
+jq -n --arg t "$TYPE" '{type:$t, specVersion:1}' > "$VAULT/.codex-vault.json"
+```
+
+## Step 6 — Seed files
+
+Keep seed content light — structure accretes from real work; never seed topical notes beyond an
+entry note. Replace `<today>` with `date +%Y-%m-%d`.
+
+**Always:** a `README.md` vault map generated from the spec, and a single entry/orientation note.
+Generate the README's taxonomy section straight from the spec so it can't drift:
+
+```bash
+jq -r '.folders[] | "- **\(.path)/** — \(.purpose)"' "$SPEC"
+```
+
+**Per archetype, additionally:**
+
+- `software-project` — `Knowledge/Agent_Orientation.md` (with the slash-command table below),
+  `Agent_Sessions/README.md`, and the three Base dashboards `Tickets.base` / `Features.base` /
+  `Agent_Sessions.base` (see `codex-mine-bases` and `../references/frontmatter-convention.md`).
+  These Bases belong to `software-project` only — it is the archetype with those folders.
+- `research` — `MOCs/Home.md` (the root Map of Content) and `Meta/templates/` stubs for
+  fleeting / literature / permanent notes.
+- `personal-pkm` — `MOCs/Home.md` and a `99 Meta/templates/` stub.
+- `technical-docs` — a one-line `index` note in each Diataxis folder and a `Meta/style-guide`
+  stub.
+
+Slash-command table for the orientation/entry note:
 
 ```markdown
-# AI Codex — Agentic Knowledge Vault
-
-> **AGENT START HERE → [[Knowledge/Agent_Orientation]]** — single-file workspace map.
-
-This vault is the canonical permanent memory and architectural foundation for autonomous agents working in this project.
-
-## 🗂️ Vault Taxonomy
-
-### [[Knowledge/]] (Canonical Knowledge Base)
-
-Distilled, thematic files containing the current state-of-the-art rules, patterns, and decisions extracted from resolved tickets and architecture docs. **Consult these first.**
-
-- **[[Knowledge/Agent_Orientation|Agent Orientation]]**: Master entry point — workspace map, governance hierarchy, .agent index, slash commands, critical invariants.
-
-*(Add Knowledge notes as they emerge. Each new note should be linked here.)*
-
-### [[Architecture/]]
-
-High-level structural definitions and historical ADRs.
-
-### [[Features/]]
-
-Detailed specifications and implementation details for specific application features.
-
-### [[Tickets/]]
-
-Project tracking and historical record of implemented tasks.
-
-- **[[Tickets/Active/|Active]]**: in-flight ticket ledgers.
-- **[[Tickets/Resolved/|Resolved]]**: archive of completed implementations.
-
-### [[Agent_Reports/]]
-
-Formal reports generated by agents regarding system state or integration progress.
-
-### [[Agent_Sessions/]]
-
-Operational log of agent sessions. Doubly-linked chain — every record points to its predecessor and successor.
-
----
-
-## ⚙️ Session Bootstrap Protocol
-
-Every new agent session must:
-
-1. Read this `README.md` and `Knowledge/Agent_Orientation.md` (auto-injected by the `codex-workflow` plugin's `SessionStart` hook).
-2. Read the two newest records in `Agent_Sessions/` (newest first).
-3. If the newest record is still open, close it, then create a new record for this session with a **backlink** to the closed one.
-4. At session end (or when handing off), update the new record's `Next Session` field with a **forward link** to its successor — sessions form a doubly-linked chain.
-
-### Session record cadence
-
-Open the new record at the **first material edit**, not retroactively. Append updates with these headers:
-
-- `## Implementation Checkpoint - <timestamp>` — after every validated work unit. Body: `Scope` / `Changes` / `Validation`.
-- `## Pre-Operation Snapshot - <timestamp>` — before any state-disrupting action.
-- `## Pivot - <timestamp>` — at tranche transitions.
-- `## Heartbeat - <timestamp>` — fallback when 30 min pass without any of the above.
-
----
-
-## 🛠️ Agent Guidelines
-
-1. **Always Update**: when a feature lands or an ADR is reached, update the vault synchronously.
-2. **Strict Syntax**: use Obsidian `[[Wikilinks]]` for cross-referencing.
-3. **Metadata**: every new note includes YAML frontmatter — see the frontmatter convention (`type`, `tags`, plus `ticket`/`area`/`stack` where relevant). **Status is encoded by folder** (e.g. `Tickets/Active/`), never duplicated in frontmatter.
-4. **Visuals**: save generated diagrams to `assets/` and link them natively.
-```
-
-### `<vault>/Knowledge/Agent_Orientation.md`
-
-```markdown
----
-date: <today>
-type: orientation
-tags: [agent, orientation, map]
----
-
-# Agent Orientation
-
-Single-file workspace map. Read this immediately after the codex `README.md`.
-
-## Workspace map
-
-<one-paragraph description of the project: what it is, what it produces, who the audience is>
-
-## Governance hierarchy
-
-1. `CLAUDE.md` at the project root (and any project-level CLAUDE.md files) — load-bearing project guidance.
-2. This vault — canonical agent knowledge.
-3. `.agent/rules/` — operational protocols, consulted per task.
-
-## Knowledge Index
-
-| Note | Purpose |
-| --- | --- |
-| *(add Knowledge notes here as they're authored)* | |
-
-## Critical invariants
-
-- *(list project-level invariants that an agent must never violate — e.g. cross-project isolation rules, data integrity contracts, security constraints)*
-
-## Slash commands
-
 | Command | Purpose |
 | --- | --- |
 | `/codex-workflow:codex-init-workspace` | Scaffold the CLAUDE.md tree. |
 | `/codex-workflow:codex-init-vault` | Scaffold this vault skeleton. |
 | `/codex-workflow:codex-init-rules` | Drop starter `.agent/rules/*.md` templates. |
-| `/codex-workflow:codex-mine-bases` | Backfill frontmatter + scaffold Base dashboards over the vault. |
-| `/codex-workflow:codex-query-vault` | Read-only live query of the vault (Bases, search, backlinks) via the Obsidian CLI. |
-| `/codex-workflow:codex-canvas-map` | Generate an Architecture Canvas relationship map for a hub note. |
-| `/codex-workflow:codex-research-ingest` | Ingest a URL into Knowledge/ as a source-stamped reference note (Defuddle). |
+| `/codex-workflow:codex-mine-bases` | Backfill frontmatter + Base dashboards (software-project). |
+| `/codex-workflow:codex-query-vault` | Read-only live query of the vault via the Obsidian CLI. |
+| `/codex-workflow:codex-canvas-map` | Generate an Architecture Canvas relationship map. |
+| `/codex-workflow:codex-research-ingest` | Ingest a URL into a source-stamped reference note. |
+| `/codex-workflow:codex-vault-lint` | Audit the vault against its archetype spec. |
 ```
 
-### `<vault>/Agent_Sessions/README.md`
+## Step 7 — Conventions and enforcement
 
-```markdown
----
-date: <today>
-type: index
-tags: [agent, sessions]
----
+Tell the user where the rules live and how they are enforced:
 
-# Agent Sessions
+- **Naming + frontmatter rules are in the spec** (`$SPEC`) — per-folder filename patterns and
+  required/optional/forbidden frontmatter keys.
+- The **`PreToolUse(Write)` hook reads the same spec** (via the marker) and structurally gates
+  new files: wrong filename shape or missing/forbidden frontmatter is rejected. It is fail-open
+  outside a marked vault.
+- **`codex-vault-lint`** audits an existing vault against the spec for the semantic issues a
+  regex cannot catch (mixed languages, near-duplicate notes, stray files).
 
-Operational log of active and historical agent sessions.
+## Step 8 — Follow-ups
 
-## Structure
-
-- Each session has its own Markdown file.
-- Update the active session record after each material implementation change, regression fix, or behavioral discovery.
-- Each record must include: `timestamp`, summary of in-progress work, pending tasks, link to the previous session, and (when closed) a link to the next session.
-- Use YAML frontmatter with `date`, `type`, and `tags`.
-
-## Naming convention
-
-- `YYYY-MM-DD-HHMMSS-slug.md`
-
-## Sessions
-
-*(newest first)*
-
-- *(no sessions yet)*
-```
-
-### Base dashboards (`*.base`)
-
-Write three Obsidian Bases at the vault root, following the property schema in
-`${CLAUDE_PLUGIN_ROOT}/references/frontmatter-convention.md`. They render as live tables in
-Obsidian. Status is derived from the folder, never duplicated in frontmatter. Each carries a
-"Needs metadata" view so schema adoption is self-tracking.
-
-`Tickets.base` (status comes from the `Active/Ready/Closed/Resolved` subfolders):
-
-```yaml
-filters:
-  and:
-    - file.inFolder("Tickets")
-    - 'file.ext == "md"'
-formulas:
-  # Parent folder minus the prefix = status lane. NOT split().last() — see reference.
-  status: 'file.folder.replace("Tickets/", "")'
-  age_days: '(now() - file.ctime).days'
-  has_meta: 'if(type, "✅", "⚠️ no frontmatter")'
-properties:
-  ticket: { displayName: "#" }
-  formula.status: { displayName: Status }
-  formula.age_days: { displayName: "Age (d)" }
-  formula.has_meta: { displayName: Meta }
-views:
-  - type: table
-    name: "Board"
-    groupBy: { property: formula.status, direction: ASC }
-    order: [file.name, ticket, type, area, tags, formula.age_days]
-  - type: table
-    name: "Needs metadata"
-    filters: { not: [type] }
-    order: [file.name, formula.status, file.mtime]
-```
-
-`Features.base` (flat folder — group by `area` instead of status):
-
-```yaml
-filters:
-  and:
-    - file.inFolder("Features")
-    - 'file.ext == "md"'
-views:
-  - type: table
-    name: "Features"
-    groupBy: { property: area, direction: ASC }
-    order: [file.name, ticket, type, area, tags]
-  - type: table
-    name: "Needs metadata"
-    filters: { not: [type] }
-    order: [file.name, file.mtime]
-```
-
-`Agent_Sessions.base` (chronological — the `YYYY-MM-DD-HHMMSS-` prefix sorts naturally):
-
-```yaml
-filters:
-  and:
-    - file.inFolder("Agent_Sessions")
-    - 'file.ext == "md"'
-    - 'file.name != "README"'
-views:
-  - type: table
-    name: "Sessions"
-    order: [file.name, created, type, tags]
-```
-
-A `.base` that fails to parse renders blank in Obsidian — validate each as YAML before finishing
-(`python3 -c "import yaml; yaml.safe_load(open(p))"`).
-
-### `.gitkeep` files
-
-Add empty `.gitkeep` to `Tickets/Active/`, `Tickets/Ready/`, `Tickets/Closed/`, `Tickets/Resolved/`, `Architecture/`, `Features/`, `Agent_Reports/`, and `assets/` so the empty directories survive `git add`.
-
-## Step 5 — Recommend follow-ups
-
-After writing, tell the user:
-
-- Run `/codex-workflow:codex-init-workspace` if the project doesn't have a CLAUDE.md tree yet — the tree should reference this vault.
-- Run `/codex-workflow:codex-init-rules` to drop a starter `.agent/rules/*.md` set if you don't already have one.
-- If the vault folder name doesn't start with `AI_Codex`, drop a `.claude/codex-workflow.config.json` setting `codex.folder` so the plugin's autodetect can find it.
-- Open the vault in Obsidian (point a vault at the folder) to take advantage of wikilink navigation and the `.base` dashboards.
-- Run `/codex-workflow:codex-mine-bases` once the vault has real notes to backfill the frontmatter schema and confirm the Base dashboards render.
+- `/codex-workflow:codex-init-workspace` if there's no CLAUDE.md tree yet (it should reference this vault).
+- `/codex-workflow:codex-init-rules` for the `.agent/rules/*` starter set.
+- `software-project`: once real notes exist, `/codex-workflow:codex-mine-bases`.
+- Open the vault in Obsidian to use wikilinks, Bases, and Canvas.
 
 ## Notes
 
-- Replace `<today>` placeholders in frontmatter with today's date in `YYYY-MM-DD` format. Get it from `date +%Y-%m-%d`.
-- The vault is meant to be edited by humans and agents alike. Skeleton content is intentionally light — the user fills it in as the project matures.
-- Do not seed any `Knowledge/<topic>.md` files beyond `Agent_Orientation.md`. Knowledge accretes from real work, not from templates.
+- **One vault = one archetype.** The marker records it; mixing archetypes in a single vault
+  defeats the spec, the hook, and the linter.
+- The vault is edited by humans and agents alike. Skeleton content is intentionally light.
+- If the vault name does not start with `AI_Codex`, set `codex.folder` in
+  `.claude/codex-workflow.config.json` so autodetect finds it.
