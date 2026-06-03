@@ -3,38 +3,194 @@
   "title": "Software / Agile Project Vault",
   "description": "The original codex shape, refined: a project + knowledge-base hybrid for an agile/XP codebase. Status is encoded by ticket folder; knowledge accretes from resolved work.",
   "folders": [
-    { "path": "Knowledge", "purpose": "Permanent distilled knowledge notes (patterns, domains, references) + the knowledge MOC" },
-    { "path": "Tickets/Active", "purpose": "In-flight ticket ledgers" },
-    { "path": "Tickets/Ready", "purpose": "Groomed, ready-to-start tickets" },
-    { "path": "Tickets/Closed", "purpose": "Merged/closed, awaiting release" },
-    { "path": "Tickets/Resolved", "purpose": "Shipped/archived ticket ledgers" },
-    { "path": "Features", "purpose": "Feature specifications and implementation detail" },
-    { "path": "Architecture/ADR", "purpose": "Architecture Decision Records" },
-    { "path": "Architecture/Patterns", "purpose": "Recurring design patterns" },
-    { "path": "Architecture/Infrastructure", "purpose": "Structural/infra definitions" },
-    { "path": "Agent_Sessions", "purpose": "Operational journal of agent sessions (doubly-linked chain)" },
-    { "path": "Agent_Reports", "purpose": "Formal agent-generated reports" },
-    { "path": "assets", "purpose": "Images and binary attachments" },
-    { "path": "Meta", "purpose": "Templates, scripts, and vault plumbing" }
+    {
+      "path": "Knowledge",
+      "purpose": "Permanent distilled knowledge notes (patterns, domains, references) + the knowledge MOC"
+    },
+    {
+      "path": "Tickets/Active",
+      "purpose": "In-flight ticket ledgers"
+    },
+    {
+      "path": "Tickets/Ready",
+      "purpose": "Groomed, ready-to-start tickets"
+    },
+    {
+      "path": "Tickets/Closed",
+      "purpose": "Merged/closed, awaiting release"
+    },
+    {
+      "path": "Tickets/Resolved",
+      "purpose": "Shipped/archived ticket ledgers"
+    },
+    {
+      "path": "Features",
+      "purpose": "Feature specifications and implementation detail"
+    },
+    {
+      "path": "Architecture/ADR",
+      "purpose": "Architecture Decision Records"
+    },
+    {
+      "path": "Architecture/Patterns",
+      "purpose": "Recurring design patterns"
+    },
+    {
+      "path": "Architecture/Infrastructure",
+      "purpose": "Structural/infra definitions"
+    },
+    {
+      "path": "Agent_Sessions",
+      "purpose": "Operational journal of agent sessions (doubly-linked chain)"
+    },
+    {
+      "path": "Agent_Reports",
+      "purpose": "Formal agent-generated reports"
+    },
+    {
+      "path": "assets",
+      "purpose": "Images and binary attachments"
+    },
+    {
+      "path": "Meta",
+      "purpose": "Templates, scripts, and vault plumbing"
+    }
   ],
   "naming": {
     "language": "en",
     "rules": [
-      { "match": "Agent_Sessions/**", "filename": "^\\d{4}-\\d{2}-\\d{2}-\\d{6}-[a-z0-9-]+$", "style": "YYYY-MM-DD-HHMMSS-kebab-slug", "example": "2026-06-02-143000-terms-spec-alignment" },
-      { "match": "Agent_Reports/**", "filename": "^\\d{4}-\\d{2}-\\d{2}-[a-z0-9-]+$", "style": "YYYY-MM-DD-kebab-slug", "example": "2026-06-02-integration-status" },
-      { "match": "Tickets/**", "filename": "^(\\d+|tech-debt|bug|task|spike)-[a-z0-9-]+$", "style": "<id-or-type>-kebab-slug", "example": "5630-terms-verification, tech-debt-promise-all-race" },
-      { "match": "Features/**", "filename": "^(\\d+-)?[a-z0-9-]+$", "style": "[<id>-]kebab-slug", "example": "5630-terms-verification" },
-      { "match": "Knowledge/**", "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+$", "style": "Natural Title Case (Obsidian-native: filename is the display title)", "example": "Dart Functional Style Examples, Domain Legal" },
-      { "match": "Architecture/ADR/**", "filename": "^\\d{4}-[a-z0-9-]+$", "style": "NNNN-kebab-title (Nygard ADR convention)", "example": "0001-record-architecture-decisions" },
-      { "match": "Architecture/**", "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+$", "style": "Natural Title Case", "example": "Analytics Observer Pattern" }
+      {
+        "match": "Agent_Sessions/**",
+        "filename": "^\\d{4}-\\d{2}-\\d{2}-\\d{6}-[a-z0-9-]+$",
+        "style": "YYYY-MM-DD-HHMMSS-kebab-slug",
+        "example": "2026-06-02-143000-terms-spec-alignment"
+      },
+      {
+        "match": "Agent_Reports/**",
+        "filename": "^\\d{4}-\\d{2}-\\d{2}-[a-z0-9-]+$",
+        "style": "YYYY-MM-DD-kebab-slug",
+        "example": "2026-06-02-integration-status"
+      },
+      {
+        "match": "Tickets/**",
+        "filename": "^(\\d+|tech-debt|bug|task|spike)-[a-z0-9-]+$",
+        "style": "<id-or-type>-kebab-slug",
+        "example": "5630-terms-verification, tech-debt-promise-all-race"
+      },
+      {
+        "match": "Features/**",
+        "filename": "^(\\d+-)?[a-z0-9-]+$",
+        "style": "[<id>-]kebab-slug",
+        "example": "5630-terms-verification"
+      },
+      {
+        "match": "Knowledge/**",
+        "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+$",
+        "style": "Natural Title Case (Obsidian-native: filename is the display title)",
+        "example": "Dart Functional Style Examples, Domain Legal"
+      },
+      {
+        "match": "Architecture/ADR/**",
+        "filename": "^\\d{4}-[a-z0-9-]+$",
+        "style": "NNNN-kebab-title (Nygard ADR convention)",
+        "example": "0001-record-architecture-decisions"
+      },
+      {
+        "match": "Architecture/**",
+        "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+$",
+        "style": "Natural Title Case",
+        "example": "Analytics Observer Pattern"
+      }
     ],
-    "default": { "filename": "^[a-z0-9-]+$", "style": "kebab-case" }
+    "default": {
+      "filename": "^[a-z0-9-]+$",
+      "style": "kebab-case"
+    },
+    "exempt": {
+      "basenames": [
+        "README.md",
+        "Agent_Orientation.md",
+        "Home.md",
+        "index.md"
+      ],
+      "folders": [
+        "assets",
+        "Meta",
+        "99 Meta"
+      ]
+    }
   },
   "frontmatter": [
-    { "match": "Tickets/**", "required": ["type"], "optional": ["ticket", "area", "stack", "tags", "created"], "forbidden": ["status"] },
-    { "match": "Features/**", "required": ["type"], "optional": ["ticket", "area", "stack", "tags", "created"], "forbidden": ["status"] },
-    { "match": "Agent_Sessions/**", "required": ["date", "type"], "optional": ["tags", "ticket"], "forbidden": [] },
-    { "match": "Knowledge/**", "required": ["type"], "optional": ["area", "tags", "created", "source", "domain", "retrieved"], "forbidden": [] },
-    { "match": "Architecture/**", "required": ["type"], "optional": ["area", "tags", "created"], "forbidden": [] }
+    {
+      "match": "Tickets/**",
+      "required": [
+        "type"
+      ],
+      "optional": [
+        "ticket",
+        "area",
+        "stack",
+        "tags",
+        "created"
+      ],
+      "forbidden": [
+        "status"
+      ]
+    },
+    {
+      "match": "Features/**",
+      "required": [
+        "type"
+      ],
+      "optional": [
+        "ticket",
+        "area",
+        "stack",
+        "tags",
+        "created"
+      ],
+      "forbidden": [
+        "status"
+      ]
+    },
+    {
+      "match": "Agent_Sessions/**",
+      "required": [
+        "date",
+        "type"
+      ],
+      "optional": [
+        "tags",
+        "ticket"
+      ],
+      "forbidden": []
+    },
+    {
+      "match": "Knowledge/**",
+      "required": [
+        "type"
+      ],
+      "optional": [
+        "area",
+        "tags",
+        "created",
+        "source",
+        "domain",
+        "retrieved"
+      ],
+      "forbidden": []
+    },
+    {
+      "match": "Architecture/**",
+      "required": [
+        "type"
+      ],
+      "optional": [
+        "area",
+        "tags",
+        "created"
+      ],
+      "forbidden": []
+    }
   ]
 }

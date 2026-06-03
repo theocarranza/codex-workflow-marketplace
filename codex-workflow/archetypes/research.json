@@ -3,32 +3,160 @@
   "title": "Research / Academic Vault",
   "description": "Zettelkasten (Fleeting -> Literature -> Permanent) layered over PARA, with Maps of Content for navigation. Separates others' ideas (Literature) from your own synthesis (Permanent).",
   "folders": [
-    { "path": "Fleeting", "purpose": "Unprocessed capture; transient ideas to be promoted or deleted" },
-    { "path": "Literature", "purpose": "Notes ON external sources (papers, books) — others' ideas, with citations" },
-    { "path": "Permanent", "purpose": "Your own atomic, synthesized notes — the Zettelkasten proper" },
-    { "path": "Projects", "purpose": "Time-bounded research efforts / papers in progress" },
-    { "path": "Resources", "purpose": "Reference material and raw sources (PDFs, datasets links)" },
-    { "path": "MOCs", "purpose": "Maps of Content — curated index notes that thread the graph" },
-    { "path": "Daily", "purpose": "Daily research log" },
-    { "path": "Meta", "purpose": "Templates, scripts, vault plumbing" },
-    { "path": "assets", "purpose": "Figures and binary attachments" }
+    {
+      "path": "Fleeting",
+      "purpose": "Unprocessed capture; transient ideas to be promoted or deleted"
+    },
+    {
+      "path": "Literature",
+      "purpose": "Notes ON external sources (papers, books) — others' ideas, with citations"
+    },
+    {
+      "path": "Permanent",
+      "purpose": "Your own atomic, synthesized notes — the Zettelkasten proper"
+    },
+    {
+      "path": "Projects",
+      "purpose": "Time-bounded research efforts / papers in progress"
+    },
+    {
+      "path": "Resources",
+      "purpose": "Reference material and raw sources (PDFs, datasets links)"
+    },
+    {
+      "path": "MOCs",
+      "purpose": "Maps of Content — curated index notes that thread the graph"
+    },
+    {
+      "path": "Daily",
+      "purpose": "Daily research log"
+    },
+    {
+      "path": "Meta",
+      "purpose": "Templates, scripts, vault plumbing"
+    },
+    {
+      "path": "assets",
+      "purpose": "Figures and binary attachments"
+    }
   ],
   "naming": {
     "language": "en",
     "rules": [
-      { "match": "Fleeting/**", "filename": "^\\d{12}$", "style": "YYYYMMDDHHmm (timestamp id)", "example": "202606021430" },
-      { "match": "Daily/**", "filename": "^\\d{4}-\\d{2}-\\d{2}$", "style": "YYYY-MM-DD", "example": "2026-06-02" },
-      { "match": "Literature/**", "filename": "^(@[a-z][a-z0-9]+\\d{4}[a-z]?(-[a-z0-9-]+)?|[A-Z][A-Za-z0-9 ,&'():\\-]+)$", "style": "@citekey (author+year, preferred) or Natural Title Case", "example": "@luhmann1992-communicating-with-slip-boxes" },
-      { "match": "Permanent/**", "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+$", "style": "Natural Title Case (one atomic idea)", "example": "Atomic notes compound over time" },
-      { "match": "MOCs/**", "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+ (MOC|Map)$", "style": "Title Case ... MOC", "example": "Knowledge Management MOC" }
+      {
+        "match": "Fleeting/**",
+        "filename": "^\\d{12}$",
+        "style": "YYYYMMDDHHmm (timestamp id)",
+        "example": "202606021430"
+      },
+      {
+        "match": "Daily/**",
+        "filename": "^\\d{4}-\\d{2}-\\d{2}$",
+        "style": "YYYY-MM-DD",
+        "example": "2026-06-02"
+      },
+      {
+        "match": "Literature/**",
+        "filename": "^(@[a-z][a-z0-9]+\\d{4}[a-z]?(-[a-z0-9-]+)?|[A-Z][A-Za-z0-9 ,&'():\\-]+)$",
+        "style": "@citekey (author+year, preferred) or Natural Title Case",
+        "example": "@luhmann1992-communicating-with-slip-boxes"
+      },
+      {
+        "match": "Permanent/**",
+        "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+$",
+        "style": "Natural Title Case (one atomic idea)",
+        "example": "Atomic notes compound over time"
+      },
+      {
+        "match": "MOCs/**",
+        "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+ (MOC|Map)$",
+        "style": "Title Case ... MOC",
+        "example": "Knowledge Management MOC"
+      }
     ],
-    "default": { "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+$", "style": "Natural Title Case" }
+    "default": {
+      "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+$",
+      "style": "Natural Title Case"
+    },
+    "exempt": {
+      "basenames": [
+        "README.md",
+        "Agent_Orientation.md",
+        "Home.md",
+        "index.md"
+      ],
+      "folders": [
+        "assets",
+        "Meta",
+        "99 Meta"
+      ]
+    }
   },
   "frontmatter": [
-    { "match": "Fleeting/**", "required": ["type"], "optional": ["tags", "created"], "forbidden": [] },
-    { "match": "Literature/**", "required": ["type", "source"], "optional": ["author", "year", "tags", "created", "doi", "zotero"], "forbidden": [] },
-    { "match": "Permanent/**", "required": ["type"], "optional": ["tags", "created", "up"], "forbidden": ["status"] },
-    { "match": "MOCs/**", "required": ["type"], "optional": ["tags", "created"], "forbidden": [] },
-    { "match": "Projects/**", "required": ["type"], "optional": ["tags", "created", "status", "area"], "forbidden": [] }
+    {
+      "match": "Fleeting/**",
+      "required": [
+        "type"
+      ],
+      "optional": [
+        "tags",
+        "created"
+      ],
+      "forbidden": []
+    },
+    {
+      "match": "Literature/**",
+      "required": [
+        "type",
+        "source"
+      ],
+      "optional": [
+        "author",
+        "year",
+        "tags",
+        "created",
+        "doi",
+        "zotero"
+      ],
+      "forbidden": []
+    },
+    {
+      "match": "Permanent/**",
+      "required": [
+        "type"
+      ],
+      "optional": [
+        "tags",
+        "created",
+        "up"
+      ],
+      "forbidden": [
+        "status"
+      ]
+    },
+    {
+      "match": "MOCs/**",
+      "required": [
+        "type"
+      ],
+      "optional": [
+        "tags",
+        "created"
+      ],
+      "forbidden": []
+    },
+    {
+      "match": "Projects/**",
+      "required": [
+        "type"
+      ],
+      "optional": [
+        "tags",
+        "created",
+        "status",
+        "area"
+      ],
+      "forbidden": []
+    }
   ]
 }

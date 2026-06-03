@@ -3,27 +3,122 @@
   "title": "Personal Knowledge Management Vault (PARA)",
   "description": "Tiago Forte's PARA: Projects (active, deadline-bound), Areas (ongoing responsibilities), Resources (topics of interest), Archive (inactive). Number-prefixed for stable ordering; Daily log and MOCs for navigation.",
   "folders": [
-    { "path": "01 Projects", "purpose": "Active, outcome-and-deadline-bound efforts" },
-    { "path": "02 Areas", "purpose": "Ongoing spheres of responsibility to maintain" },
-    { "path": "03 Resources", "purpose": "Topics and references of ongoing interest" },
-    { "path": "04 Archive", "purpose": "Inactive items from the other three" },
-    { "path": "Daily", "purpose": "Daily notes / journal" },
-    { "path": "MOCs", "purpose": "Maps of Content for navigation" },
-    { "path": "99 Meta", "purpose": "Templates, scripts, vault plumbing" },
-    { "path": "assets", "purpose": "Images and binary attachments" }
+    {
+      "path": "01 Projects",
+      "purpose": "Active, outcome-and-deadline-bound efforts"
+    },
+    {
+      "path": "02 Areas",
+      "purpose": "Ongoing spheres of responsibility to maintain"
+    },
+    {
+      "path": "03 Resources",
+      "purpose": "Topics and references of ongoing interest"
+    },
+    {
+      "path": "04 Archive",
+      "purpose": "Inactive items from the other three"
+    },
+    {
+      "path": "Daily",
+      "purpose": "Daily notes / journal"
+    },
+    {
+      "path": "MOCs",
+      "purpose": "Maps of Content for navigation"
+    },
+    {
+      "path": "99 Meta",
+      "purpose": "Templates, scripts, vault plumbing"
+    },
+    {
+      "path": "assets",
+      "purpose": "Images and binary attachments"
+    }
   ],
   "naming": {
     "language": "en",
     "rules": [
-      { "match": "Daily/**", "filename": "^\\d{4}-\\d{2}-\\d{2}$", "style": "YYYY-MM-DD", "example": "2026-06-02" },
-      { "match": "MOCs/**", "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+ (MOC|Map)$", "style": "Title Case ... MOC", "example": "Health MOC" }
+      {
+        "match": "Daily/**",
+        "filename": "^\\d{4}-\\d{2}-\\d{2}$",
+        "style": "YYYY-MM-DD",
+        "example": "2026-06-02"
+      },
+      {
+        "match": "MOCs/**",
+        "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+ (MOC|Map)$",
+        "style": "Title Case ... MOC",
+        "example": "Health MOC"
+      }
     ],
-    "default": { "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+$", "style": "Natural Title Case" }
+    "default": {
+      "filename": "^[A-Z][A-Za-z0-9 ,&'():\\-]+$",
+      "style": "Natural Title Case"
+    },
+    "exempt": {
+      "basenames": [
+        "README.md",
+        "Agent_Orientation.md",
+        "Home.md",
+        "index.md"
+      ],
+      "folders": [
+        "assets",
+        "Meta",
+        "99 Meta"
+      ]
+    }
   },
   "frontmatter": [
-    { "match": "01 Projects/**", "required": ["type"], "optional": ["tags", "created", "status", "due", "area"], "forbidden": [] },
-    { "match": "02 Areas/**", "required": ["type"], "optional": ["tags", "created"], "forbidden": [] },
-    { "match": "03 Resources/**", "required": ["type"], "optional": ["tags", "created", "source"], "forbidden": [] },
-    { "match": "04 Archive/**", "required": ["type"], "optional": ["tags", "created", "archived"], "forbidden": [] }
+    {
+      "match": "01 Projects/**",
+      "required": [
+        "type"
+      ],
+      "optional": [
+        "tags",
+        "created",
+        "status",
+        "due",
+        "area"
+      ],
+      "forbidden": []
+    },
+    {
+      "match": "02 Areas/**",
+      "required": [
+        "type"
+      ],
+      "optional": [
+        "tags",
+        "created"
+      ],
+      "forbidden": []
+    },
+    {
+      "match": "03 Resources/**",
+      "required": [
+        "type"
+      ],
+      "optional": [
+        "tags",
+        "created",
+        "source"
+      ],
+      "forbidden": []
+    },
+    {
+      "match": "04 Archive/**",
+      "required": [
+        "type"
+      ],
+      "optional": [
+        "tags",
+        "created",
+        "archived"
+      ],
+      "forbidden": []
+    }
   ]
 }

@@ -2,9 +2,9 @@
 
 Portable hooks and skills for the AI Codex workflow: a project layout pairing a codebase with an Obsidian vault that serves as the canonical agent knowledge base.
 
-## What's in v0.8.0
+## What's in v0.9.0
 
-Two hooks, three init skills, three mining skills, one live query skill, one Canvas generator, one research-ingest skill, and **four research-backed vault archetypes** — all configurable per project with sensible zero-config defaults.
+Three hooks, three init skills, three mining skills, one live query skill, one Canvas generator, one research-ingest skill, and **four research-backed vault archetypes** — all configurable per project with sensible zero-config defaults.
 
 ### Init skills
 
@@ -53,6 +53,20 @@ Denies Read/Grep on markdown files inside the project tree that aren't on a smal
 - **Codex folder is always fully allowed** (matched by name from config or autodetect).
 - Custom patterns use bash `case` glob syntax (`*` matches any characters including `/`).
 
+### `PreToolUse` (matcher `Write`) — archetype naming enforcement
+
+Structurally gates new `.md` writes inside a vault that declares its archetype (a
+`.codex-vault.json` marker written by `codex-init-vault`). Reads the marker → the archetype
+spec, and **denies** a write whose filename shape is wrong or whose frontmatter is missing a
+required key / contains a forbidden one (e.g. `status` in a ticket). It is **fail-open**: a no-op
+outside a marked vault, for unknown archetypes, or for exempt files (`README.md`,
+`Agent_Orientation.md`, `Home.md`, `index.md`, and `assets/` / `Meta/` folders).
+
+- Enforces only what regex/sets can decide (filename **shape**, required/forbidden frontmatter
+  **keys**) — semantic issues (language, near-duplicates) are `codex-vault-lint`'s job.
+- Disable per project via `.claude/codex-workflow.config.json` → `{"namingEnforcement":{"enabled":false}}`.
+- Implemented in `hooks/scripts/naming-enforcement.py` (Python 3, stdlib only).
+
 ## Installation
 
 Add the marketplace once per machine, then install the plugin:
@@ -82,7 +96,8 @@ If you want to customize, drop a file at `.claude/codex-workflow.config.json` in
 | 0.5.0 | obsidian-cli tranche: `codex-query-vault` — read-only live `base:query`/`search`/`backlinks` vault access. |
 | 0.6.0 | json-canvas tranche: `codex-canvas-map` — Canvas relationship map for a hub note (links + backlinks) into `Architecture/`. |
 | 0.7.0 | defuddle tranche: `codex-research-ingest` — fetch a URL via Defuddle into a source-stamped `Knowledge/` reference note. |
-| 0.8.0 (this) | Vault archetypes: 4 research-backed specs (software-project/research/personal-pkm/technical-docs); `codex-init-vault --type` scaffolds from spec + writes a `.codex-vault.json` marker. |
+| 0.8.0 | Vault archetypes: 4 research-backed specs (software-project/research/personal-pkm/technical-docs); `codex-init-vault --type` scaffolds from spec + writes a `.codex-vault.json` marker. |
+| 0.9.0 (this) | `PreToolUse(Write)` archetype naming-enforcement hook — structural filename + frontmatter gating, marker-gated and fail-open. |
 | 0.6.0 (planned) | json-canvas tranche: Architecture canvases. |
 | 0.7.0 (planned) | defuddle tranche: clean research ingestion into `Knowledge/`. |
 
@@ -98,7 +113,8 @@ codex-workflow/
 │   ├── hooks.json
 │   └── scripts/
 │       ├── codex-bootstrap.sh
-│       └── markdown-allowlist.sh
+│       ├── markdown-allowlist.sh
+│       └── naming-enforcement.py
 ├── skills/
 │   ├── codex-init-workspace/SKILL.md
 │   ├── codex-init-vault/SKILL.md
@@ -131,6 +147,7 @@ Hook scripts require:
 - `bash`
 - `jq`
 - `realpath` (part of GNU coreutils)
+- `python3` (stdlib only — for the naming-enforcement hook)
 
 All three are standard on Linux and recent macOS. Windows users running under WSL or Git Bash should also be fine.
 
