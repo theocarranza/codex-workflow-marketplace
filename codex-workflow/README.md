@@ -75,7 +75,7 @@ outside a marked vault, for unknown archetypes, or for exempt files (`README.md`
 
 Add the marketplace once per machine, then install the plugin:
 
-```
+```text
 /plugin marketplace add <your-github-owner>/codex-workflow-marketplace
 /plugin install codex-workflow@codex-workflow-marketplace
 ```
@@ -90,21 +90,21 @@ If you want to customize, drop a file at `.claude/codex-workflow.config.json` in
 
 ## Roadmap
 
-| Version | Adds |
-|---|---|
-| 0.1.0 | Hooks: SessionStart bootstrap + PreToolUse markdown allowlist. Config-driven, with autodetect fallback. |
-| 0.1.1 | Hooks: broaden `AI_Codex*/` autodetect glob; silently skip missing bootstrap files. |
-| 0.2.0 | Init skills: `codex-init-workspace`, `codex-init-vault`, `codex-init-rules`. |
-| 0.3.0 | Mining skills: `codex-mine-style`, `codex-add-refactor-entry`. |
-| 0.4.0 | Bases tranche: `codex-mine-bases` skill + frontmatter convention; `codex-init-vault` now emits `.base` dashboards (Tickets/Features/Agent_Sessions). |
-| 0.5.0 | obsidian-cli tranche: `codex-query-vault` — read-only live `base:query`/`search`/`backlinks` vault access. |
-| 0.6.0 | json-canvas tranche: `codex-canvas-map` — Canvas relationship map for a hub note (links + backlinks) into `Architecture/`. |
-| 0.7.0 | defuddle tranche: `codex-research-ingest` — fetch a URL via Defuddle into a source-stamped `Knowledge/` reference note. |
-| 0.8.0 | Vault archetypes: 4 research-backed specs (software-project/research/personal-pkm/technical-docs); `codex-init-vault --type` scaffolds from spec + writes a `.codex-vault.json` marker. |
-| 0.9.0 | `PreToolUse(Write)` archetype naming-enforcement hook — structural filename + frontmatter gating, marker-gated and fail-open. |
-| 0.10.0 (this) | `codex-vault-lint` — audit a vault against its archetype spec (structural scanner + semantic layer) and apply renames/frontmatter fixes with backlink repair. |
-| 0.6.0 (planned) | json-canvas tranche: Architecture canvases. |
-| 0.7.0 (planned) | defuddle tranche: clean research ingestion into `Knowledge/`. |
+| Version         | Adds                                                                                                                                                                                    |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0.1.0           | Hooks: SessionStart bootstrap + PreToolUse markdown allowlist. Config-driven, with autodetect fallback.                                                                                 |
+| 0.1.1           | Hooks: broaden `AI_Codex*/` autodetect glob; silently skip missing bootstrap files.                                                                                                     |
+| 0.2.0           | Init skills: `codex-init-workspace`, `codex-init-vault`, `codex-init-rules`.                                                                                                            |
+| 0.3.0           | Mining skills: `codex-mine-style`, `codex-add-refactor-entry`.                                                                                                                          |
+| 0.4.0           | Bases tranche: `codex-mine-bases` skill + frontmatter convention; `codex-init-vault` now emits `.base` dashboards (Tickets/Features/Agent_Sessions).                                    |
+| 0.5.0           | obsidian-cli tranche: `codex-query-vault` — read-only live `base:query`/`search`/`backlinks` vault access.                                                                              |
+| 0.6.0           | json-canvas tranche: `codex-canvas-map` — Canvas relationship map for a hub note (links + backlinks) into `Architecture/`.                                                              |
+| 0.7.0           | defuddle tranche: `codex-research-ingest` — fetch a URL via Defuddle into a source-stamped `Knowledge/` reference note.                                                                 |
+| 0.8.0           | Vault archetypes: 4 research-backed specs (software-project/research/personal-pkm/technical-docs); `codex-init-vault --type` scaffolds from spec + writes a `.codex-vault.json` marker. |
+| 0.9.0           | `PreToolUse(Write)` archetype naming-enforcement hook — structural filename + frontmatter gating, marker-gated and fail-open.                                                           |
+| 0.10.0 (this)   | `codex-vault-lint` — audit a vault against its archetype spec (structural scanner + semantic layer) and apply renames/frontmatter fixes with backlink repair.                           |
+| 0.6.0 (planned) | json-canvas tranche: Architecture canvases.                                                                                                                                             |
+| 0.7.0 (planned) | defuddle tranche: clean research ingestion into `Knowledge/`.                                                                                                                           |
 
 See [`docs/obsidian-leverage.md`](./docs/obsidian-leverage.md) for how each tranche maps to the `obsidian-skills` plugin, and the open-runway status.
 

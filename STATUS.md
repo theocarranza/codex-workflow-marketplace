@@ -2,13 +2,14 @@
 
 Snapshot of the in-flight plugin build, captured for cross-session resumption. Update when state changes meaningfully.
 
-## Where we are (2026-06-02)
+## Where we are (2026-06-20)
 
-**v0.4.0 — Bases tranche shipped, pushed, and validated both ways. Adds the `codex-mine-bases` skill, the frontmatter convention reference, and `.base` emission in `codex-init-vault`. Validated (a) migrate-existing: full `AI_Codex_Aplicatudo` migration — 100% frontmatter coverage across Tickets/Features/Agent_Sessions, 9 backfilled + 12 legacy notes normalized (stale `status:` drift removed, id fields unified to `ticket`), 3 Bases rendering live in Obsidian; and (b) cold-start: a fresh `codex-init-vault` scaffold whose Board populates and whose "Needs metadata" view correctly catches a frontmatter-less note. All tranches v0.1.0–v0.4.0 shipped and pushed.**
+**v0.10.2 — Released. Extends markdown allowlist patterns for nested files under `docs/*` and `projects/*/e2e_test/*`, and adds description to marketplace manifest to pass validation. All tranches v0.1.0–v0.10.2 shipped, validated, and pushed.**
 
 ### Done
 
 **v0.1.0 — Hooks tranche (committed `6d10cc8`, pushed to `origin/main`).**
+
 - Marketplace + plugin scaffolding (`.claude-plugin/marketplace.json`, `codex-workflow/.claude-plugin/plugin.json`).
 - Two portable hook scripts:
   - `hooks/scripts/codex-bootstrap.sh` — SessionStart, reads `.claude/codex-workflow.config.json` for `codex.folder` + `codex.bootstrap[]`, autodetects `AI_Codex*/` glob when no config, silent no-op when no codex folder exists.
@@ -18,12 +19,14 @@ Snapshot of the in-flight plugin build, captured for cross-session resumption. U
 - Plugin + marketplace READMEs.
 
 **v0.1.1 — Hook portability patch (committed `b5782b2`, pushed; installed locally).**
+
 - Glob relaxed `AI_Codex_*/` → `AI_Codex*/` so vaults named `AI_Codex/` are autodetected.
 - Missing bootstrap files silently skipped (previously emitted noisy `(missing: ...)` placeholders).
 - Marketplace + plugin manifests bumped to 0.1.1.
 - Plugin installed via `/plugin marketplace add theocarranza/codex-workflow-marketplace` + `/plugin install codex-workflow@codex-workflow-marketplace` + `/reload-plugins`. Behavioral validation: Read on `aplicatudo-monorepo/README.md` is denied by the plugin's allowlist (confirmed live in-session).
 
 **v0.2.0 — Init skills tranche (committed `9af4b88`, pushed; live-validated).**
+
 - Three new skills under `codex-workflow/skills/`:
   - `codex-init-workspace/SKILL.md` — interactive walkthrough that inspects `package.json` / `pubspec.yaml` / `angular.json` / `pnpm-workspace.yaml`, detects project shape (single vs monorepo) and per-project stacks, then scaffolds the root + per-project CLAUDE.md tree from stack-specific templates. Never overwrites without per-file approval.
   - `codex-init-vault/SKILL.md` — interactive walkthrough that picks a vault folder name (default `AI_Codex_<ProjectName>`), refuses if vault exists, scaffolds the full skeleton (`README.md`, `Knowledge/Agent_Orientation.md`, `Agent_Sessions/README.md`, plus `.gitkeep`-anchored empty dirs).
@@ -35,6 +38,7 @@ Snapshot of the in-flight plugin build, captured for cross-session resumption. U
 - Live-validated post-refresh: `/skills` lists all three with `locked by author` (matches `disable-model-invocation: true`) at ~100–120 tokens each.
 
 **v0.3.0 — Mining skills tranche (pushed; awaiting user-side refresh + verification).**
+
 - Two new skills under `codex-workflow/skills/`:
   - `codex-mine-style/SKILL.md` — interactive walkthrough that gathers commits via `git log --author --no-merges`, surfaces high-frequency files, samples patterns, drafts a `<Stack>_Functional_Style_Examples.md` Knowledge note with 6–10 file/line anchors and an Agent Rules block.
   - `codex-add-refactor-entry/SKILL.md` — takes a commit hash via `$ARGUMENTS`, validates with `git rev-parse`, reads the diff, drafts a before/after Catalog entry annotated with the principle applied, appends after confirmation.
@@ -43,6 +47,7 @@ Snapshot of the in-flight plugin build, captured for cross-session resumption. U
 - Manifests bumped to 0.3.0; `jq -e` clean.
 
 **v0.4.0 — Bases tranche (built locally, not yet committed/pushed).**
+
 - New reference `codex-workflow/references/frontmatter-convention.md` — the property schema (`ticket`/`type`/`area`/`stack`/`tags`/`created`), the core rule (**status encoded by folder, never in frontmatter**), and the tested Bases formula gotcha (no list `.last()`/index — derive the status lane with `file.folder.replace("Tickets/", "")`, not `split("/").last()`).
 - New skill `codex-workflow/skills/codex-mine-bases/SKILL.md` — interactive: survey vault → confirm vocabulary → backfill frontmatter on notes lacking it (safe prepend, skips notes that already have `---`) → write `Tickets.base`/`Features.base`/`Agent_Sessions.base` (each with a self-tracking "Needs metadata" view) → optional in-vault convention note. `disable-model-invocation: true`.
 - `codex-init-vault/SKILL.md` updated: Tickets skeleton now `Active/Ready/Closed/Resolved`; emits the three `.base` dashboards; `.gitkeep` list, Agent_Orientation slash-command table, and Agent Guidelines updated for the convention.
@@ -50,6 +55,7 @@ Snapshot of the in-flight plugin build, captured for cross-session resumption. U
 - **Live prototype on the real vault** (kept): `AI_Codex_Aplicatudo/Tickets.base` + frontmatter backfilled on `Feature 6196` and `feature-5632`. Board groups by the four status lanes; user confirmed it renders.
 
 **v0.4.0 validation (both paths exercised).**
+
 - Committed `41a6bc6`, pushed to `origin/main`; user ran `/plugin marketplace update` + `/reload-plugins`.
 - **Migrate-existing path** — drove `codex-mine-bases` by hand over `AI_Codex_Aplicatudo`: backfilled the 7 Tickets + 2 Features lacking frontmatter, normalized 12 legacy notes (renamed `work_item_id`/`ticket_id`/`id` → `ticket`, dropped stale `status:` incl. two `status: active` notes mis-sitting in `Resolved/`, stripped folder-encoded tags, added `area`/`stack`), wrote `Features.base` + `Agent_Sessions.base`, removed an empty `Untitled.md` stub, moved a misfiled ValueNotifier article to `Knowledge/`. Result: 63 frontmatter blocks parse clean, all 3 Bases render in Obsidian (Obsidian normalized them on open). Vocab settled to `type ∈ {feature, tech-debt, ticket}`, `area ∈ {terms-of-use, attendance, calendar, onboarding}`.
 - **Cold-start path** — scaffolded a fresh vault per `codex-init-vault` v0.4.0 in `/tmp`; Board populated from sample tickets grouped by status folder, and a deliberately bare note surfaced only in "Needs metadata". Confirms the from-scratch flow.
@@ -74,9 +80,10 @@ The original roadmap is feature-complete: v0.4.0 is shipped and validated both w
 
 Motivated by an audit of the live vault showing severe naming/structure drift (30/69 files off-pattern) and the realization that folder structure was never researched. Decisions: ship all four archetypes; **hard hook only** for enforcement; build a linter. Research synthesized into `codex-workflow/docs/obsidian-leverage.md` references + `archetypes/README.md` (PARA / Zettelkasten / MOC / Diataxis; flat-over-deep; folders=where, tags=what; literature-driven naming, not vault-driven).
 
-- **v0.8.0 — archetype specs + spec-driven init (SHIPPED, validated; awaiting push + user refresh).** Four machine-readable specs in `codex-workflow/archetypes/*.json` (folders[], naming rules[], frontmatter rules[]) + format `README.md`. Naming chosen from the literature (Obsidian-native Title Case for notes; Nygard ADR convention for `Architecture/ADR`; citekeys for Literature; kebab for Diataxis docs; timestamp IDs for journals). `codex-init-vault` rewritten to be archetype-driven: `--type`, scaffolds folders from the spec, writes a `.codex-vault.json` marker (type+specVersion) that the hook/linter key off. Dogfooded: all four archetypes scaffold cleanly; software-project spec flags exactly the 30 off-pattern files in the live vault. Manifests 0.7.0 → 0.8.0.
-- **v0.9.0 — PreToolUse(Write) structural-enforcement hook (SHIPPED, validated; awaiting push + user refresh).** `hooks/scripts/naming-enforcement.py` (Python 3 stdlib): walks up for the `.codex-vault.json` marker → loads the archetype spec → denies wrong filename shape / missing-required / forbidden frontmatter keys. Fail-open outside a marked vault, for unknown archetypes, and for exempt basenames (README/Agent_Orientation/Home/index) + folders (assets/Meta/99 Meta). Per-project disable via config `namingEnforcement.enabled=false`. Specs gained a `naming.exempt` block so the plugin's own seeds (e.g. Agent_Orientation.md) aren't self-rejected. Wired in hooks.json (matcher Write). Dogfooded 13 cases (8 allow incl. exemptions + fail-open, 5 deny with clear reasons). Manifests 0.8.0 → 0.9.0.
-- **v0.10.0 — codex-vault-lint skill (SHIPPED, validated; awaiting push + user refresh).** Deterministic scanner `scripts/vault-lint.py` (reads marker/spec; reports filename violations, missing/forbidden frontmatter, stray files, duplicate ticket ids; `--json`/`--type`) + interactive skill `codex-vault-lint` that adds the semantic layer (mixed language, near-duplicates, mangled names) and applies renames (git mv + wikilink repair) and frontmatter fixes on confirmation, then re-scans. Dogfooded scanner on live `AI_Codex_Aplicatudo` (--type software-project): 83 findings — 62 filename, 14 missing-type, 6 stray, 1 duplicate id (#5628) — all real. Manifests 0.9.0 → 0.10.0.
+- **v0.8.0 — archetype specs + spec-driven init (SHIPPED, validated).** Four machine-readable specs in `codex-workflow/archetypes/*.json` (folders[], naming rules[], frontmatter rules[]) + format `README.md`. Naming chosen from the literature (Obsidian-native Title Case for notes; Nygard ADR convention for `Architecture/ADR`; citekeys for Literature; kebab for Diataxis docs; timestamp IDs for journals). `codex-init-vault` rewritten to be archetype-driven: `--type`, scaffolds folders from the spec, writes a `.codex-vault.json` marker (type+specVersion) that the hook/linter key off. Dogfooded: all four archetypes scaffold cleanly; software-project spec flags exactly the 30 off-pattern files in the live vault. Manifests 0.7.0 → 0.8.0.
+- **v0.9.0 — PreToolUse(Write) structural-enforcement hook (SHIPPED, validated).** `hooks/scripts/naming-enforcement.py` (Python 3 stdlib): walks up for the `.codex-vault.json` marker → loads the archetype spec → denies wrong filename shape / missing-required / forbidden frontmatter keys. Fail-open outside a marked vault, for unknown archetypes, and for exempt basenames (README/Agent_Orientation/Home/index) + folders (assets/Meta/99 Meta). Per-project disable via config `namingEnforcement.enabled=false`. Specs gained a `naming.exempt` block so the plugin's own seeds (e.g. Agent_Orientation.md) aren't self-rejected. Wired in hooks.json (matcher Write). Dogfooded 13 cases (8 allow incl. exemptions + fail-open, 5 deny with clear reasons). Manifests 0.8.0 → 0.9.0.
+- **v0.10.0 — codex-vault-lint skill (SHIPPED, validated).** Deterministic scanner `scripts/vault-lint.py` (reads marker/spec; reports filename violations, missing/forbidden frontmatter, stray files, duplicate ticket ids; `--json`/`--type`) + interactive skill `codex-vault-lint` that adds the semantic layer (mixed language, near-duplicates, mangled names) and applies renames (git mv + wikilink repair) and frontmatter fixes on confirmation, then re-scans. Dogfooded scanner on live `AI_Codex_Aplicatudo` (--type software-project): 83 findings — 62 filename, 14 missing-type, 6 stray, 1 duplicate id (#5628) — all real. Manifests 0.9.0 → 0.10.0.
+- **v0.10.2 — Allowlist fixes + marketplace validation (SHIPPED, validated).** Corrects `projects/*/e2e_test` to `projects/*/e2e_test/*` to properly allow nested files. Adds description to `marketplace.json` to satisfy validation schema checks.
 
 **Archetype initiative COMPLETE.** All three planned tranches shipped: v0.8.0 specs + spec-driven init, v0.9.0 enforcement hook, v0.10.0 lint. The original three asks (naming spec, researched archetypes, write-time enforcement) are delivered. Retrofit of the live aplicatudo vault is available via `codex-vault-lint` whenever the user wants it (vault content, user-owned).
 

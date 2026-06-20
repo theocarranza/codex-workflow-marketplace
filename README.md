@@ -6,7 +6,7 @@ A single-plugin Claude Code marketplace shipping [`codex-workflow`](./codex-work
 
 Add this marketplace and install the plugin in any project:
 
-```
+```text
 /plugin marketplace add <github-owner>/codex-workflow-marketplace
 /plugin install codex-workflow@codex-workflow-marketplace
 ```
@@ -17,7 +17,7 @@ See [`codex-workflow/README.md`](./codex-workflow/README.md) for what the plugin
 
 Layout:
 
-```
+```text
 codex-workflow-marketplace/
 ├── .claude-plugin/
 │   └── marketplace.json      ← marketplace manifest
